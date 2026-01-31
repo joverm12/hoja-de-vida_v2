@@ -1,0 +1,195 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Hoja de Vida | {{ p.nombres }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        :root { --sidebar-bg: #1e293b; --accent: #38bdf8; }
+        body { display: flex; background: #f1f5f9; font-family: 'Inter', sans-serif; min-height: 100vh; }
+        .sidebar { width: 280px; background: var(--sidebar-bg); height: 100vh; position: fixed; color: white; padding: 25px; z-index: 100; }
+        .main { margin-left: 280px; width: calc(100% - 280px); padding: 40px; }
+        .nav-btn { width: 100%; text-align: left; padding: 12px; margin-bottom: 8px; border-radius: 12px; color: #94a3b8; border: none; background: none; cursor: pointer; transition: 0.3s; }
+        .nav-btn:hover, .btn-active { background: #334155; color: var(--accent); }
+        .section-view { display: none; background: white; padding: 40px; border-radius: 24px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .active { display: block; animation: fadeIn 0.4s ease-out; }
+        .profile-img { width: 180px; height: 180px; object-fit: cover; border: 6px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .badge-skill { background: #f0f9ff; color: #0369a1; padding: 8px 16px; border-radius: 50px; margin: 4px; display: inline-block; font-weight: 500; border: 1px solid #bae6fd; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @media print { .no-print { display: none !important; } .main { margin-left: 0 !important; width: 100% !important; } .section-view { display: block !important; margin-bottom: 20px; } }
+    </style>
+</head>
+<body>
+
+<div class="sidebar no-print">
+    <h3 class="text-center mb-5 text-white fw-bold">HOJA DE VIDA</h3>
+    <nav>
+        <button class="nav-btn btn-active" onclick="show('inicio', this)"><i class="bi bi-house-door me-2"></i> Inicio</button>
+        <button class="nav-btn" onclick="show('exp', this)"><i class="bi bi-briefcase me-2"></i> Experiencia</button>
+        <button class="nav-btn" onclick="show('reco', this)"><i class="bi bi-trophy me-2"></i> Reconocimientos</button>
+        <button class="nav-btn" onclick="show('cur', this)"><i class="bi bi-journal-check me-2"></i> Cursos</button>
+        <button class="nav-btn" onclick="show('paca', this)"><i class="bi bi-mortarboard me-2"></i> Prod. Académicos</button>
+        <button class="nav-btn" onclick="show('plab', this)"><i class="bi bi-cpu me-2"></i> Prod. Laborales</button>
+        <button class="nav-btn" onclick="show('gar', this)"><i class="bi bi-tags me-2"></i> Venta Garage</button>
+        
+        <button class="btn btn-success w-100 mt-4 shadow-sm fw-bold" onclick="window.print()">
+            <i class="bi bi-download me-2"></i> IMPRIMIR PDF
+        </button>
+        <a href="/admin" class="btn btn-danger w-100 mt-2 shadow-sm"><i class="bi bi-gear-fill me-2"></i> ADMIN</a>
+    </nav>
+</div>
+
+<div class="main">
+    {% if not p %}
+        <div class="alert alert-warning">No hay datos. Ve al admin y crea tu perfil.</div>
+    {% else %}
+    
+    <div id="inicio" class="section-view active">
+        <div class="row align-items-center mb-5">
+            <div class="col-md-3 text-center">
+                {% if p.foto %}
+                    <img src="{{ p.foto.url }}" class="rounded-circle profile-img">
+                {% else %}
+                    <div class="bg-secondary rounded-circle d-inline-block shadow" style="width: 150px; height: 150px;"></div>
+                {% endif %}
+            </div>
+            <div class="col-md-9">
+                <h1 class="fw-bold display-4 mb-2">{{ p.nombres }} {{ p.apellidos }}</h1>
+                <div class="p-4 bg-light rounded-4 border-start border-5 border-primary shadow-sm mt-3">
+                    <h5 class="fw-bold mb-2">Acerca de mí</h5>
+                    <p class="mb-0 text-secondary italic">{{ p.sobre_mi }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 bg-white shadow-sm p-4 mb-5 rounded-4 border-start border-4 border-primary">
+            <h5 class="fw-bold mb-4 text-dark border-bottom pb-2">Información Personal</h5>
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                <div class="col"><small class="text-muted d-block">Cédula</small><strong>{{ p.numerocedula }}</strong></div>
+                <div class="col"><small class="text-muted d-block">Nacionalidad</small><strong>{{ p.nacionalidad }}</strong></div>
+                <div class="col"><small class="text-muted d-block">Estado Civil</small><strong>{{ p.estadocivil }}</strong></div>
+                <div class="col"><small class="text-muted d-block">Fecha Nacimiento</small><strong>{{ p.fechanacimiento }}</strong></div>
+                <div class="col"><small class="text-muted d-block">Sexo</small><strong>{{ p.get_sexo_display }}</strong></div>
+                <div class="col"><small class="text-muted d-block">Teléfono</small><strong>{{ p.telefonofijo }}</strong></div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-7">
+                <div class="card border-0 shadow-sm p-4 h-100 rounded-4">
+                    <h5 class="fw-bold mb-4">Formación Académica</h5>
+                    <h6>{{ p.universidad }}</h6>
+                    <span class="badge bg-primary-subtle text-primary border px-3 mb-3">{{ p.periodo_u }}</span>
+                    <p class="mb-2"><strong>Estado:</strong> {{ p.bachillerato_status }}</p>
+                    {% if p.certificado_bachiller_pdf %}
+                        <a href="{{ p.certificado_bachiller_pdf.url }}" target="_blank" class="btn btn-sm btn-outline-danger">Ver Título PDF</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="card border-0 shadow-sm p-4 h-100 rounded-4">
+                    <h5 class="fw-bold mb-4 text-warning"><i class="bi bi-lightning-charge"></i> Aptitudes</h5>
+                    <div class="d-flex flex-wrap">
+                        {% for s in skills %}
+                        <span class="badge-skill shadow-sm">{{ s }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="exp" class="section-view">
+        <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Experiencia Laboral</h2>
+        {% for e in experiencias %}
+            <div class="card p-4 mb-3 border-0 shadow-sm border-start border-5 border-primary">
+                <h5 class="fw-bold mb-1">{{ e.cargodesempenado }}</h5>
+                <p class="text-primary mb-2">{{ e.nombrempresa }}</p>
+                <small class="text-muted">{{ e.fechainicio }} - {{ e.fechafin|default:"Actualidad" }}</small>
+                <p class="mt-2">{{ e.actividadesrealizadas }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div id="reco" class="section-view">
+        <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Reconocimientos</h2>
+        {% for r in reconocimientos %}
+            <div class="card p-4 mb-3 border-0 shadow-sm bg-light rounded-4">
+                <h6 class="fw-bold mb-1">{{ r.nombrereconocimiento }}</h6>
+                <p class="small text-muted">{{ r.institucionqueotorga }} ({{ r.fechareconocimiento }})</p>
+                {% if r.comprobante_archivo %}
+                    <a href="{{ r.comprobante_archivo.url }}" target="_blank" class="btn btn-sm btn-link text-primary p-0"><i class="bi bi-eye"></i> Ver Comprobante</a>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div id="cur" class="section-view">
+        <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Cursos Realizados</h2>
+        {% for c in cursos %}
+            <div class="card p-4 mb-3 border-0 shadow-sm border-start border-4 border-info rounded-4">
+                <h6 class="fw-bold mb-1">{{ c.nombrecurso }}</h6>
+                <p class="small text-muted"><strong>{{ c.nombreinstitucion }}</strong> ({{ c.numerohoras }}h)</p>
+                {% if c.certificado_pdf %}
+                    <a href="{{ c.certificado_pdf.url }}" target="_blank" class="btn btn-sm btn-outline-info">Ver Certificado</a>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div id="paca" class="section-view">
+        <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Productos Académicos</h2>
+        {% for i in academicos %}
+            <div class="card p-4 mb-3 border-0 shadow-sm border-start border-5 border-info rounded-4">
+                <h5 class="fw-bold mb-1">{{ i.nombrerecurso }}</h5>
+                <p class="text-muted small mb-2">Categoría: {{ i.clasificador }}</p>
+                <p class="mb-0 text-secondary">{{ i.descripcion }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div id="plab" class="section-view">
+        <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Productos Laborales</h2>
+        {% for i in laborales %}
+            <div class="card p-4 mb-3 border-0 shadow-sm border-start border-5 border-success rounded-4">
+                <h5 class="fw-bold mb-1">{{ i.nombreproducto }}</h5>
+                <small class="text-muted d-block mb-2">Fecha: {{ i.fechaproducto }}</small>
+                <p class="text-secondary small mb-0 border-top pt-2">{{ i.descripcion }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div id="gar" class="section-view">
+        <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Venta Garage</h2>
+        <div class="row g-4">
+            {% for g in garage %}
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden">
+                    {% if g.foto_producto %}
+                        <img src="{{ g.foto_producto.url }}" class="card-img-top" style="height: 180px; object-fit: cover;">
+                    {% endif %}
+                    <div class="card-body text-center">
+                        <h6 class="fw-bold">{{ g.nombreproducto }}</h6>
+                        <span class="badge bg-danger fs-6 mb-2">${{ g.valordelbien }}</span>
+                        <p class="small text-muted">{{ g.estadoproducto }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    function show(id, btn) {
+        document.querySelectorAll('.section-view').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('btn-active'));
+        document.getElementById(id).classList.add('active');
+        btn.classList.add('btn-active');
+    }
+</script>
+</body>
+</html>
