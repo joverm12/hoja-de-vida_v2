@@ -23,16 +23,19 @@ class DatosPersonales(models.Model):
     licenciaconducir = models.CharField(max_length=6, blank=True)
     telefonofijo = models.CharField(max_length=15)
     direcciondomiciliaria = models.CharField(max_length=100)
+    email = models.EmailField(max_length=100, null=True, blank=True)
     sitioweb = models.URLField(max_length=100, blank=True)
     universidad = models.CharField(max_length=100, default="ULEAM")
     periodo_u = models.CharField(max_length=50, default="Mayo 2024 - En curso")
     bachillerato_status = models.CharField(max_length=100, default="Bachillerato - Completo")
-    certificado_bachiller_pdf = CloudinaryField('documento', folder='certificados/', resource_type='raw', null=True, blank=True)
+    certificado_bachiller_pdf = CloudinaryField('documento', folder='certificados/', resource_type='auto', null=True, blank=True)
+    # NUEVO: Vista previa para el título
+    vista_previa_titulo = CloudinaryField('imagen', folder='certificados/previa/', null=True, blank=True)
     aptitudes = models.TextField(help_text="Separa por comas")
 
     def __str__(self): return f"{self.nombres} {self.apellidos}"
 
-# 3. EXPERIENCIA LABORAL (Campos de empresa opcionales)
+# 3. EXPERIENCIA LABORAL
 class ExperienciaLaboral(models.Model):
     perfil = models.ForeignKey(DatosPersonales, on_delete=models.CASCADE)
     cargodesempenado = models.CharField(max_length=100)
@@ -45,17 +48,21 @@ class ExperienciaLaboral(models.Model):
     fechainiciogestion = models.DateField(validators=[validar_fecha_no_futura])
     fechafingestion = models.DateField(null=True, blank=True, validators=[validar_fecha_no_futura])
     descripcionfunciones = models.CharField(max_length=100)
-    rutacertificado = CloudinaryField('documento', folder='experiencia/', resource_type='raw', null=True, blank=True)
+    rutacertificado = CloudinaryField('documento', folder='experiencia/', resource_type='auto', null=True, blank=True)
+    # NUEVO: Vista previa para certificado laboral
+    vista_previa_exp = CloudinaryField('imagen', folder='experiencia/previa/', null=True, blank=True)
     activarparaqueseveaenfront = models.BooleanField(default=True)
 
-# 4. RECONOCIMIENTOS (Con descripción para cuando no hay PDF)
+# 4. RECONOCIMIENTOS
 class Reconocimiento(models.Model):
     perfil = models.ForeignKey(DatosPersonales, on_delete=models.CASCADE)
     nombrereconocimiento = models.CharField(max_length=100)
     institucionqueotorga = models.CharField(max_length=100)
     fechareconocimiento = models.DateField(validators=[validar_fecha_no_futura])
     descripcion = models.TextField(blank=True, null=True) 
-    comprobante_archivo = CloudinaryField('documento', folder='reconocimientos/', resource_type='raw', null=True, blank=True)
+    comprobante_archivo = CloudinaryField('documento', folder='reconocimientos/', resource_type='auto', null=True, blank=True)
+    # NUEVO: Vista previa para reconocimiento
+    vista_previa_reco = CloudinaryField('imagen', folder='reconocimientos/previa/', null=True, blank=True)
     activarparaqueseveaenfront = models.BooleanField(default=True)
 
 # 5. CURSOS REALIZADOS
@@ -70,7 +77,9 @@ class CursoRealizado(models.Model):
     nombrecontactoauspicia = models.CharField(max_length=100, null=True, blank=True)
     telefonocontactoauspicia = models.CharField(max_length=60, null=True, blank=True)
     emailempresapatrocinadora = models.CharField(max_length=60, null=True, blank=True)
-    rutacertificado = CloudinaryField('documento', folder='cursos/', resource_type='raw', null=True, blank=True)
+    rutacertificado = CloudinaryField('documento', folder='cursos/', resource_type='auto', null=True, blank=True)
+    # NUEVO: Vista previa para curso
+    vista_previa_cur = CloudinaryField('imagen', folder='cursos/previa/', null=True, blank=True)
     activarparaqueseveaenfront = models.BooleanField(default=True)
 
     def __str__(self): return self.nombrerecurso
