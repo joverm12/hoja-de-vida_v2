@@ -54,6 +54,9 @@
             padding: 40px; 
             border-radius: 24px; 
             box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); 
+            /* CORRECCIÓN: Evita que el texto se salga del contenedor */
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         .active { 
             display: block; 
@@ -90,53 +93,27 @@
             to { opacity: 1; transform: translateY(0); } 
         }
         
-        /* CORRECCIÓN DE ESPACIOS EN BLANCO Y SELECCIÓN */
+        /* CORRECCIÓN DE ESPACIOS EN BLANCO Y SELECCIÓN PARA IMPRESIÓN */
         @media print { 
-            @page { 
-                size: auto; 
-                margin: 8mm 10mm; 
-            }
-            .no-print { 
-                display: none !important; 
-            } 
-            body { 
-                background: white !important; 
-                display: block !important; 
-            }
-            .main { 
-                margin-left: 0 !important; 
-                width: 100% !important; 
-                padding: 0 !important; 
-            } 
-            .section-view { 
-                display: none !important; 
-                opacity: 1 !important; 
-            }
+            @page { size: auto; margin: 5mm 10mm; }
+            .no-print { display: none !important; } 
+            body { background: white !important; display: block !important; }
+            .main { margin-left: 0 !important; width: 100% !important; padding: 0 !important; } 
+            .section-view { display: none !important; opacity: 1 !important; }
             .section-view.print-include { 
                 display: block !important; 
                 box-shadow: none !important; 
                 padding: 10px !important; 
-                margin: 0 0 15px 0 !important; 
+                margin: 0 0 10px 0 !important; 
                 border: none !important;
                 page-break-inside: auto !important;
             }
-            .btn-ver-pdf, .btn-outline-danger, .btn-outline-info { 
-                display: none !important; 
-            }
-            .pdf-preview-print { 
-                display: block !important; 
-                margin: 10px auto; 
-                page-break-inside: avoid; 
-            }
-            .card { 
-                border: 1px solid #eee !important; 
-                break-inside: avoid; 
-                margin-bottom: 12px !important; 
-            }
-            .row { 
-                display: flex !important; 
-                flex-wrap: wrap !important; 
-            }
+            .btn-ver-pdf, .btn-outline-danger, .btn-outline-info { display: none !important; }
+            .pdf-preview-print { display: block !important; margin: 10px auto; page-break-inside: avoid; }
+            .card { border: 1px solid #eee !important; break-inside: avoid; margin-bottom: 8px !important; padding: 15px !important; }
+            .row { display: flex !important; flex-wrap: wrap !important; }
+            .text-wrap-print { white-space: normal !important; word-break: break-word !important; text-align: justify; }
+            h1, h2, h5 { margin-bottom: 5px !important; }
         }
     </style>
 </head>
@@ -146,7 +123,7 @@
     <h3 class="text-center mb-5 text-white fw-bold">HOJA DE VIDA</h3>
     
     <div class="mb-4 p-3 bg-dark rounded-3">
-        <p class="small text-info fw-bold mb-2 text-uppercase">Opciones PDF:</p>
+        <p class="small text-info fw-bold mb-2">INCLUIR EN PDF:</p>
         <div class="form-check mb-1">
             <input class="form-check-input" type="checkbox" checked disabled id="c-inicio">
             <label class="form-check-label small" for="c-inicio">Inicio (Fijo)</label>
@@ -202,9 +179,7 @@
         <button class="btn btn-success w-100 mt-4 shadow-sm fw-bold" onclick="imprimirSeleccion()">
             <i class="bi bi-printer me-2"></i> DESCARGAR PDF
         </button>
-        <a href="/admin" class="btn btn-danger w-100 mt-2 shadow-sm">
-            <i class="bi bi-gear-fill me-2"></i> ADMIN
-        </a>
+        <a href="/admin" class="btn btn-danger w-100 mt-2 shadow-sm"><i class="bi bi-gear-fill me-2"></i> ADMIN</a>
     </nav>
 </div>
 
@@ -226,7 +201,7 @@
                 <h1 class="fw-bold display-4 mb-2">{{ p.nombres }} {{ p.apellidos }}</h1>
                 <div class="p-4 bg-light rounded-4 border-start border-5 border-primary shadow-sm mt-3">
                     <h5 class="fw-bold mb-2">Acerca de mí</h5>
-                    <p class="mb-0 text-secondary italic">{{ p.sobre_mi }}</p>
+                    <p class="mb-0 text-secondary italic text-wrap-print">{{ p.sobre_mi }}</p>
                 </div>
             </div>
         </div>
@@ -234,54 +209,18 @@
         <div class="card border-0 bg-white shadow-sm p-4 mb-5 rounded-4 border-start border-4 border-primary">
             <h5 class="fw-bold mb-4 text-dark border-bottom pb-2">Información Personal</h5>
             <div class="row row-cols-1 row-cols-md-3 g-4">
-                <div class="col">
-                    <small class="text-muted d-block">Apellidos</small>
-                    <strong>{{ p.apellidos }}</strong>
-                </div>
-                <div class="col">
-                    <small class="text-muted d-block">Nacionalidad</small>
-                    <strong>{{ p.nacionalidad }}</strong>
-                </div>
-                <div class="col">
-                    <small class="text-muted d-block">Lugar Nacimiento</small>
-                    <strong>{{ p.lugarnacimiento }}</strong>
-                </div>
-                <div class="col">
-                    <small class="text-muted d-block">Fecha Nacimiento</small>
-                    <strong>{{ p.fechanacimiento }}</strong>
-                </div>
-                <div class="col">
-                    <small class="text-muted d-block">Cédula</small>
-                    <strong>{{ p.numerocedula }}</strong>
-                </div>
-                <div class="col">
-                    <small class="text-muted d-block">Sexo</small>
-                    <strong>{{ p.get_sexo_display }}</strong>
-                </div>
-                <div class="col">
-                    <small class="text-muted d-block">Estado Civil</small>
-                    <strong>{{ p.estadocivil }}</strong>
-                </div>
-                <div class="col">
-                    <small class="text-muted d-block">Licencia</small>
-                    <strong>{{ p.licenciaconducir|default:"No" }}</strong>
-                </div>
-                <div class="col">
-                    <small class="text-muted d-block">Teléfono</small>
-                    <strong>{{ p.telefonofijo }}</strong>
-                </div>
-                <div class="col">
-                    <small class="text-muted d-block">Correo</small>
-                    <strong>{{ p.email|default:"No registrado" }}</strong>
-                </div>
-                <div class="col">
-                    <small class="text-muted d-block">Dirección domiciliaria</small>
-                    <strong>{{ p.direcciondomiciliaria }}</strong>
-                </div>
-                <div class="col">
-                    <small class="text-muted d-block">Sitio web</small>
-                    <strong>{{ p.sitioweb|default:"N/A" }}</strong>
-                </div>
+                <div class="col"><small class="text-muted d-block">Apellidos</small><strong>{{ p.apellidos }}</strong></div>
+                <div class="col"><small class="text-muted d-block">Nacionalidad</small><strong>{{ p.nacionalidad }}</strong></div>
+                <div class="col"><small class="text-muted d-block">Lugar Nacimiento</small><strong>{{ p.lugarnacimiento }}</strong></div>
+                <div class="col"><small class="text-muted d-block">Fecha Nacimiento</small><strong>{{ p.fechanacimiento }}</strong></div>
+                <div class="col"><small class="text-muted d-block">Cédula</small><strong>{{ p.numerocedula }}</strong></div>
+                <div class="col"><small class="text-muted d-block">Sexo</small><strong>{{ p.get_sexo_display }}</strong></div>
+                <div class="col"><small class="text-muted d-block">Estado Civil</small><strong>{{ p.estadocivil }}</strong></div>
+                <div class="col"><small class="text-muted d-block">Licencia</small><strong>{{ p.licenciaconducir|default:"No" }}</strong></div>
+                <div class="col"><small class="text-muted d-block">Teléfono</small><strong>{{ p.telefonofijo }}</strong></div>
+                <div class="col"><small class="text-muted d-block">Correo</small><strong>{{ p.email|default:"No registrado" }}</strong></div>
+                <div class="col"><small class="text-muted d-block">Dirección domiciliaria</small><strong>{{ p.direcciondomiciliaria }}</strong></div>
+                <div class="col"><small class="text-muted d-block">Sitio web</small><strong>{{ p.sitioweb|default:"N/A" }}</strong></div>
             </div>
         </div>
 
@@ -313,24 +252,31 @@
         </div>
     </div>
 
-    <div id="exp" class="section-view">
+    <div id="exp" class="section-view print-include">
         <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Experiencia Laboral</h2>
         {% for e in experiencias %}
             <div class="card p-4 mb-3 border-0 shadow-sm border-start border-5 border-primary">
                 <h5 class="fw-bold mb-1">{{ e.cargodesempenado }}</h5>
-                <p class="text-primary mb-2">{{ e.nombrempresa }}</p>
+                <p class="text-primary mb-2 fw-bold">{{ e.nombrempresa }} - {{ e.lugarempresa|default:"" }}</p>
+                <div class="row g-2 mb-2 small text-muted">
+                    <div class="col-md-6">{% if e.emailempresa %}<i class="bi bi-envelope"></i> {{ e.emailempresa }}{% endif %}</div>
+                    <div class="col-md-6">{% if e.sitiowebempresa %}<i class="bi bi-globe"></i> {{ e.sitiowebempresa }}{% endif %}</div>
+                    <div class="col-md-6">{% if e.nombrecontactoempresarial %}<i class="bi bi-person"></i> {{ e.nombrecontactoempresarial }}{% endif %}</div>
+                    <div class="col-md-6">{% if e.telefonocontactoempresarial %}<i class="bi bi-telephone"></i> {{ e.telefonocontactoempresarial }}{% endif %}</div>
+                </div>
+                <small class="text-muted d-block mb-2"><strong>Periodo:</strong> {{ e.fechainiciogestion }} a {{ e.fechafingestion|default:"Actualidad" }}</small>
                 {% if e.rutacertificado %}
                     <a href="{{ e.rutacertificado.url }}" target="_blank" class="btn btn-sm btn-link text-primary p-0 btn-ver-pdf no-print">Ver Certificado</a>
                 {% endif %}
                 {% if e.vista_previa_exp %}
                     <img src="{{ e.vista_previa_exp.url }}" class="pdf-preview-print">
                 {% endif %}
-                <p class="mt-2">{{ e.descripcionfunciones }}</p>
+                <p class="mt-2 text-wrap-print" style="text-align: justify;">{{ e.descripcionfunciones }}</p>
             </div>
         {% endfor %}
     </div>
 
-    <div id="reco" class="section-view">
+    <div id="reco" class="section-view print-include">
         <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Reconocimientos</h2>
         {% for r in reconocimientos %}
             <div class="card p-4 mb-3 border-0 shadow-sm bg-light rounded-4">
@@ -342,17 +288,18 @@
                 {% if r.vista_previa_reco %}
                     <img src="{{ r.vista_previa_reco.url }}" class="pdf-preview-print">
                 {% endif %}
-                <p class="mt-2">{{ r.descripcion }}</p>
+                <p class="mt-2 text-wrap-print">{{ r.descripcion }}</p>
             </div>
         {% endfor %}
     </div>
 
-    <div id="cur" class="section-view">
+    <div id="cur" class="section-view print-include">
         <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Cursos Realizados</h2>
         {% for c in cursos %}
             <div class="card p-4 mb-3 border-0 shadow-sm border-start border-4 border-info rounded-4">
                 <h6 class="fw-bold mb-1">{{ c.nombrerecurso }}</h6>
-                <p class="small text-muted"><strong>{{ c.entidadpatrocinadora }}</strong> ({{ c.totalhoras }}h)</p>
+                <p class="small text-muted"><strong>{{ c.entidadpatrocinadora }}</strong></p>
+                <small class="text-muted d-block mb-2"><strong>Periodo:</strong> {{ c.fechainicio }} a {{ c.fechafin }} ({{ c.totalhoras }}h)</small>
                 {% if c.rutacertificado %}
                     <a href="{{ c.rutacertificado.url }}" target="_blank" class="btn btn-sm btn-outline-info btn-ver-pdf no-print">Ver Certificado</a>
                 {% endif %}
@@ -363,29 +310,29 @@
         {% endfor %}
     </div>
 
-    <div id="paca" class="section-view">
+    <div id="paca" class="section-view print-include">
         <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Prod. Académicos</h2>
         {% for i in academicos %}
             <div class="card p-4 mb-3 border-0 shadow-sm border-start border-5 border-info rounded-4">
                 <h5 class="fw-bold mb-1">{{ i.nombrerecurso }}</h5>
                 <p class="text-muted small mb-2">Categoría: {{ i.clasificador }}</p>
-                <p class="mb-0 text-secondary">{{ i.descripcion }}</p>
+                <p class="mb-0 text-secondary text-wrap-print">{{ i.descripcion }}</p>
             </div>
         {% endfor %}
     </div>
 
-    <div id="plab" class="section-view">
+    <div id="plab" class="section-view print-include">
         <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Prod. Laborales</h2>
         {% for i in laborales %}
             <div class="card p-4 mb-3 border-0 shadow-sm border-start border-5 border-success rounded-4">
                 <h5 class="fw-bold mb-1">{{ i.nombreproducto }}</h5>
                 <small class="text-muted d-block mb-2">Fecha: {{ i.fechaproducto }}</small>
-                <p class="text-secondary small mb-0 border-top pt-2">{{ i.descripcion }}</p>
+                <p class="text-secondary small mb-0 border-top pt-2 text-wrap-print">{{ i.descripcion }}</p>
             </div>
         {% endfor %}
     </div>
 
-    <div id="gar" class="section-view">
+    <div id="gar" class="section-view print-include">
         <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Venta Garage</h2>
         <div class="row g-4">
             {% for g in garage %}
@@ -415,21 +362,13 @@
     }
 
     function imprimirSeleccion() {
-        // Limpiamos inclusiones anteriores
         document.querySelectorAll('.section-view').forEach(s => s.classList.remove('print-include'));
-        
-        // El Inicio siempre va primero (tu condición)
         document.getElementById('inicio').classList.add('print-include');
-        
-        // Buscamos qué checkboxes marcó el usuario en la barra lateral
         document.querySelectorAll('.s-sel:checked').forEach(input => {
             const secId = input.getAttribute('data-sec');
             const sec = document.getElementById(secId);
-            if (sec) {
-                sec.classList.add('print-include');
-            }
+            if (sec) sec.classList.add('print-include');
         });
-        
         window.print();
     }
 </script>
