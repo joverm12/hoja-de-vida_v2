@@ -89,14 +89,54 @@
             from { opacity: 0; transform: translateY(10px); } 
             to { opacity: 1; transform: translateY(0); } 
         }
+        
+        /* CORRECCIÓN DE ESPACIOS EN BLANCO Y SELECCIÓN */
         @media print { 
-            .no-print { display: none !important; } 
-            .main { margin-left: 0 !important; width: 100% !important; padding: 0 !important; } 
-            .section-view:not(.print-include) { display: none !important; }
-            .section-view.print-include { display: block !important; box-shadow: none !important; margin-bottom: 20px; }
-            .btn-ver-pdf { display: none !important; }
-            .pdf-preview-print { display: block !important; margin: 15px auto; }
-            .card { border: 1px solid #eee !important; break-inside: avoid; }
+            @page { 
+                size: auto; 
+                margin: 8mm 10mm; 
+            }
+            .no-print { 
+                display: none !important; 
+            } 
+            body { 
+                background: white !important; 
+                display: block !important; 
+            }
+            .main { 
+                margin-left: 0 !important; 
+                width: 100% !important; 
+                padding: 0 !important; 
+            } 
+            .section-view { 
+                display: none !important; 
+                opacity: 1 !important; 
+            }
+            .section-view.print-include { 
+                display: block !important; 
+                box-shadow: none !important; 
+                padding: 10px !important; 
+                margin: 0 0 15px 0 !important; 
+                border: none !important;
+                page-break-inside: auto !important;
+            }
+            .btn-ver-pdf, .btn-outline-danger, .btn-outline-info { 
+                display: none !important; 
+            }
+            .pdf-preview-print { 
+                display: block !important; 
+                margin: 10px auto; 
+                page-break-inside: avoid; 
+            }
+            .card { 
+                border: 1px solid #eee !important; 
+                break-inside: avoid; 
+                margin-bottom: 12px !important; 
+            }
+            .row { 
+                display: flex !important; 
+                flex-wrap: wrap !important; 
+            }
         }
     </style>
 </head>
@@ -106,7 +146,7 @@
     <h3 class="text-center mb-5 text-white fw-bold">HOJA DE VIDA</h3>
     
     <div class="mb-4 p-3 bg-dark rounded-3">
-        <p class="small text-info fw-bold mb-2">INCLUIR EN PDF:</p>
+        <p class="small text-info fw-bold mb-2 text-uppercase">Opciones PDF:</p>
         <div class="form-check mb-1">
             <input class="form-check-input" type="checkbox" checked disabled id="c-inicio">
             <label class="form-check-label small" for="c-inicio">Inicio (Fijo)</label>
@@ -122,6 +162,18 @@
         <div class="form-check mb-1">
             <input class="form-check-input s-sel" type="checkbox" checked data-sec="cur" id="c-cur">
             <label class="form-check-label small" for="c-cur">Cursos</label>
+        </div>
+        <div class="form-check mb-1">
+            <input class="form-check-input s-sel" type="checkbox" checked data-sec="paca" id="c-paca">
+            <label class="form-check-label small" for="c-paca">P. Académicos</label>
+        </div>
+        <div class="form-check mb-1">
+            <input class="form-check-input s-sel" type="checkbox" checked data-sec="plab" id="c-plab">
+            <label class="form-check-label small" for="c-plab">P. Laborales</label>
+        </div>
+        <div class="form-check mb-1">
+            <input class="form-check-input s-sel" type="checkbox" checked data-sec="gar" id="c-gar">
+            <label class="form-check-label small" for="c-gar">Garage</label>
         </div>
     </div>
 
@@ -148,7 +200,7 @@
             <i class="bi bi-tags me-2"></i> Venta Garage
         </button>
         <button class="btn btn-success w-100 mt-4 shadow-sm fw-bold" onclick="imprimirSeleccion()">
-            <i class="bi bi-printer me-2"></i> IMPRIMIR PDF
+            <i class="bi bi-printer me-2"></i> DESCARGAR PDF
         </button>
         <a href="/admin" class="btn btn-danger w-100 mt-2 shadow-sm">
             <i class="bi bi-gear-fill me-2"></i> ADMIN
@@ -261,13 +313,12 @@
         </div>
     </div>
 
-    <div id="exp" class="section-view print-include">
+    <div id="exp" class="section-view">
         <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Experiencia Laboral</h2>
         {% for e in experiencias %}
             <div class="card p-4 mb-3 border-0 shadow-sm border-start border-5 border-primary">
                 <h5 class="fw-bold mb-1">{{ e.cargodesempenado }}</h5>
                 <p class="text-primary mb-2">{{ e.nombrempresa }}</p>
-                <small class="text-muted">{{ e.fechainiciogestion }} - {{ e.fechafingestion|default:"Actualidad" }}</small>
                 {% if e.rutacertificado %}
                     <a href="{{ e.rutacertificado.url }}" target="_blank" class="btn btn-sm btn-link text-primary p-0 btn-ver-pdf no-print">Ver Certificado</a>
                 {% endif %}
@@ -279,7 +330,7 @@
         {% endfor %}
     </div>
 
-    <div id="reco" class="section-view print-include">
+    <div id="reco" class="section-view">
         <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Reconocimientos</h2>
         {% for r in reconocimientos %}
             <div class="card p-4 mb-3 border-0 shadow-sm bg-light rounded-4">
@@ -296,7 +347,7 @@
         {% endfor %}
     </div>
 
-    <div id="cur" class="section-view print-include">
+    <div id="cur" class="section-view">
         <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Cursos Realizados</h2>
         {% for c in cursos %}
             <div class="card p-4 mb-3 border-0 shadow-sm border-start border-4 border-info rounded-4">
@@ -364,13 +415,21 @@
     }
 
     function imprimirSeleccion() {
+        // Limpiamos inclusiones anteriores
         document.querySelectorAll('.section-view').forEach(s => s.classList.remove('print-include'));
+        
+        // El Inicio siempre va primero (tu condición)
         document.getElementById('inicio').classList.add('print-include');
+        
+        // Buscamos qué checkboxes marcó el usuario en la barra lateral
         document.querySelectorAll('.s-sel:checked').forEach(input => {
             const secId = input.getAttribute('data-sec');
             const sec = document.getElementById(secId);
-            if (sec) sec.classList.add('print-include');
+            if (sec) {
+                sec.classList.add('print-include');
+            }
         });
+        
         window.print();
     }
 </script>
