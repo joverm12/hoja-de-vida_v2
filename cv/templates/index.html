@@ -25,6 +25,7 @@
             color: white; 
             padding: 25px; 
             z-index: 100; 
+            overflow-y: auto;
         }
         .main { 
             margin-left: 280px; 
@@ -91,8 +92,8 @@
         @media print { 
             .no-print { display: none !important; } 
             .main { margin-left: 0 !important; width: 100% !important; padding: 0 !important; } 
-            .section-view { display: none !important; }
-            .section-view.active, #inicio { display: block !important; box-shadow: none !important; margin-bottom: 20px; }
+            .section-view:not(.print-include) { display: none !important; }
+            .section-view.print-include { display: block !important; box-shadow: none !important; margin-bottom: 20px; }
             .btn-ver-pdf { display: none !important; }
             .pdf-preview-print { display: block !important; margin: 15px auto; }
             .card { border: 1px solid #eee !important; break-inside: avoid; }
@@ -103,6 +104,27 @@
 
 <div class="sidebar no-print">
     <h3 class="text-center mb-5 text-white fw-bold">HOJA DE VIDA</h3>
+    
+    <div class="mb-4 p-3 bg-dark rounded-3">
+        <p class="small text-info fw-bold mb-2">INCLUIR EN PDF:</p>
+        <div class="form-check mb-1">
+            <input class="form-check-input" type="checkbox" checked disabled id="c-inicio">
+            <label class="form-check-label small" for="c-inicio">Inicio (Fijo)</label>
+        </div>
+        <div class="form-check mb-1">
+            <input class="form-check-input s-sel" type="checkbox" checked data-sec="exp" id="c-exp">
+            <label class="form-check-label small" for="c-exp">Experiencia</label>
+        </div>
+        <div class="form-check mb-1">
+            <input class="form-check-input s-sel" type="checkbox" checked data-sec="reco" id="c-reco">
+            <label class="form-check-label small" for="c-reco">Reconocimientos</label>
+        </div>
+        <div class="form-check mb-1">
+            <input class="form-check-input s-sel" type="checkbox" checked data-sec="cur" id="c-cur">
+            <label class="form-check-label small" for="c-cur">Cursos</label>
+        </div>
+    </div>
+
     <nav>
         <button class="nav-btn btn-active" onclick="show('inicio', this)">
             <i class="bi bi-house-door me-2"></i> Inicio
@@ -125,7 +147,7 @@
         <button class="nav-btn" onclick="show('gar', this)">
             <i class="bi bi-tags me-2"></i> Venta Garage
         </button>
-        <button class="btn btn-success w-100 mt-4 shadow-sm fw-bold" onclick="window.print()">
+        <button class="btn btn-success w-100 mt-4 shadow-sm fw-bold" onclick="imprimirSeleccion()">
             <i class="bi bi-printer me-2"></i> IMPRIMIR PDF
         </button>
         <a href="/admin" class="btn btn-danger w-100 mt-2 shadow-sm">
@@ -139,7 +161,7 @@
         <div class="alert alert-warning">No hay datos. Ve al admin y crea tu perfil.</div>
     {% else %}
     
-    <div id="inicio" class="section-view active">
+    <div id="inicio" class="section-view active print-include">
         <div class="row align-items-center mb-5">
             <div class="col-md-3 text-center">
                 {% if p.foto %}
@@ -239,7 +261,7 @@
         </div>
     </div>
 
-    <div id="exp" class="section-view">
+    <div id="exp" class="section-view print-include">
         <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Experiencia Laboral</h2>
         {% for e in experiencias %}
             <div class="card p-4 mb-3 border-0 shadow-sm border-start border-5 border-primary">
@@ -257,7 +279,7 @@
         {% endfor %}
     </div>
 
-    <div id="reco" class="section-view">
+    <div id="reco" class="section-view print-include">
         <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Reconocimientos</h2>
         {% for r in reconocimientos %}
             <div class="card p-4 mb-3 border-0 shadow-sm bg-light rounded-4">
@@ -274,7 +296,7 @@
         {% endfor %}
     </div>
 
-    <div id="cur" class="section-view">
+    <div id="cur" class="section-view print-include">
         <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Cursos Realizados</h2>
         {% for c in cursos %}
             <div class="card p-4 mb-3 border-0 shadow-sm border-start border-4 border-info rounded-4">
@@ -339,6 +361,17 @@
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('btn-active'));
         document.getElementById(id).classList.add('active');
         btn.classList.add('btn-active');
+    }
+
+    function imprimirSeleccion() {
+        document.querySelectorAll('.section-view').forEach(s => s.classList.remove('print-include'));
+        document.getElementById('inicio').classList.add('print-include');
+        document.querySelectorAll('.s-sel:checked').forEach(input => {
+            const secId = input.getAttribute('data-sec');
+            const sec = document.getElementById(secId);
+            if (sec) sec.classList.add('print-include');
+        });
+        window.print();
     }
 </script>
 </body>
