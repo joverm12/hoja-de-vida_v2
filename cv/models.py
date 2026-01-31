@@ -55,7 +55,6 @@ class Reconocimiento(models.Model):
     institucionqueotorga = models.CharField(max_length=100)
     fechareconocimiento = models.DateField(validators=[validar_fecha_no_futura])
     descripcion = models.TextField(blank=True, null=True) 
-    descripcion_alternativa = models.TextField(blank=True, null=True, help_text="Se mostrará si no hay PDF")
     comprobante_archivo = CloudinaryField('documento', folder='reconocimientos/', resource_type='raw', null=True, blank=True)
     activarparaqueseveaenfront = models.BooleanField(default=True)
 

@@ -88,6 +88,8 @@
                 <div class="col"><small class="text-muted d-block">Fecha Nacimiento</small><strong>{{ p.fechanacimiento }}</strong></div>
                 <div class="col"><small class="text-muted d-block">Sexo</small><strong>{{ p.get_sexo_display }}</strong></div>
                 <div class="col"><small class="text-muted d-block">Teléfono</small><strong>{{ p.telefonofijo }}</strong></div>
+                <div class="col"><small class="text-muted d-block">Correo</small><strong>{{ p.email|default:"No registrado" }}</strong></div>
+                <div class="col"><small class="text-muted d-block">Dirección</small><strong>{{ p.direccion|default:"No registrado" }}</strong></div>
             </div>
         </div>
 
@@ -142,11 +144,10 @@
             <div class="card p-4 mb-3 border-0 shadow-sm bg-light rounded-4">
                 <h6 class="fw-bold mb-1">{{ r.nombrereconocimiento }}</h6>
                 <p class="small text-muted">{{ r.institucionqueotorga }} ({{ r.fechareconocimiento }})</p>
+                <p class="mt-2">{{ r.descripcion }}</p>
                 {% if r.comprobante_archivo %}
-                    <a href="{{ r.comprobante_archivo.url }}" target="_blank" class="btn btn-sm btn-link text-primary p-0 btn-ver-pdf"><i class="bi bi-eye"></i> Ver Comprobante</a>
+                    <a href="{{ r.comprobante_archivo.url }}" download target="_blank" class="btn btn-sm btn-link text-primary p-0 btn-ver-pdf"><i class="bi bi-download"></i> Descargar Comprobante PDF</a>
                     <embed src="{{ r.comprobante_archivo.url }}" type="application/pdf" class="pdf-preview-print">
-                {% else %}
-                    <p class="mt-2 text-secondary small"><em>{{ r.descripcion_alternativa|default:"Sin descripción disponible." }}</em></p>
                 {% endif %}
             </div>
         {% endfor %}
