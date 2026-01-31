@@ -17,8 +17,23 @@
         .active { display: block; animation: fadeIn 0.4s ease-out; }
         .profile-img { width: 180px; height: 180px; object-fit: cover; border: 6px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
         .badge-skill { background: #f0f9ff; color: #0369a1; padding: 8px 16px; border-radius: 50px; margin: 4px; display: inline-block; font-weight: 500; border: 1px solid #bae6fd; }
+        
+        /* ESTILO PARA EL PDF: Oculto en la web, visible al imprimir */
+        .pdf-preview-print { display: none; width: 100%; height: 600px; border: 1px solid #ddd; border-radius: 12px; margin-top: 10px; }
+
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @media print { .no-print { display: none !important; } .main { margin-left: 0 !important; width: 100% !important; } .section-view { display: block !important; margin-bottom: 20px; } }
+        
+        @media print { 
+            .no-print { display: none !important; } 
+            .main { margin-left: 0 !important; width: 100% !important; padding: 0 !important; } 
+            .section-view { display: none !important; }
+            .section-view.active, #inicio { display: block !important; box-shadow: none !important; margin-bottom: 20px; }
+            
+            /* MEJORA: Ocultar botones y mostrar PDF al imprimir */
+            .btn-ver-pdf { display: none !important; }
+            .pdf-preview-print { display: block !important; }
+            .card { border: 1px solid #eee !important; break-inside: avoid; }
+        }
     </style>
 </head>
 <body>
@@ -35,7 +50,7 @@
         <button class="nav-btn" onclick="show('gar', this)"><i class="bi bi-tags me-2"></i> Venta Garage</button>
         
         <button class="btn btn-success w-100 mt-4 shadow-sm fw-bold" onclick="window.print()">
-            <i class="bi bi-download me-2"></i> IMPRIMIR PDF
+            <i class="bi bi-printer me-2"></i> IMPRIMIR PDF
         </button>
         <a href="/admin" class="btn btn-danger w-100 mt-2 shadow-sm"><i class="bi bi-gear-fill me-2"></i> ADMIN</a>
     </nav>
@@ -84,7 +99,8 @@
                     <span class="badge bg-primary-subtle text-primary border px-3 mb-3">{{ p.periodo_u }}</span>
                     <p class="mb-2"><strong>Estado:</strong> {{ p.bachillerato_status }}</p>
                     {% if p.certificado_bachiller_pdf %}
-                        <a href="{{ p.certificado_bachiller_pdf.url }}" target="_blank" class="btn btn-sm btn-outline-danger">Ver Título PDF</a>
+                        <a href="{{ p.certificado_bachiller_pdf.url }}" target="_blank" class="btn btn-sm btn-outline-danger btn-ver-pdf">Ver Título PDF</a>
+                        <embed src="{{ p.certificado_bachiller_pdf.url }}" type="application/pdf" class="pdf-preview-print">
                     {% endif %}
                 </div>
             </div>
@@ -107,8 +123,15 @@
             <div class="card p-4 mb-3 border-0 shadow-sm border-start border-5 border-primary">
                 <h5 class="fw-bold mb-1">{{ e.cargodesempenado }}</h5>
                 <p class="text-primary mb-2">{{ e.nombrempresa }}</p>
-                <small class="text-muted">{{ e.fechainicio }} - {{ e.fechafin|default:"Actualidad" }}</small>
-                <p class="mt-2">{{ e.actividadesrealizadas }}</p>
+                <small class="text-muted">{{ e.fechainiciogestion }} - {{ e.fechafingestion|default:"Actualidad" }}</small>
+                {% if e.nombrecontactoempresarial %}
+                    <p class="small text-muted mb-1">Contacto: {{ e.nombrecontactoempresarial }} ({{ e.telefonocontactoempresarial }})</p>
+                {% endif %}
+                <p class="mt-2">{{ e.descripcionfunciones }}</p>
+                {% if e.rutacertificado %}
+                    <a href="{{ e.rutacertificado.url }}" target="_blank" class="btn btn-sm btn-link text-primary p-0 btn-ver-pdf">Ver Certificado Laboral</a>
+                    <embed src="{{ e.rutacertificado.url }}" type="application/pdf" class="pdf-preview-print">
+                {% endif %}
             </div>
         {% endfor %}
     </div>
@@ -120,7 +143,10 @@
                 <h6 class="fw-bold mb-1">{{ r.nombrereconocimiento }}</h6>
                 <p class="small text-muted">{{ r.institucionqueotorga }} ({{ r.fechareconocimiento }})</p>
                 {% if r.comprobante_archivo %}
-                    <a href="{{ r.comprobante_archivo.url }}" target="_blank" class="btn btn-sm btn-link text-primary p-0"><i class="bi bi-eye"></i> Ver Comprobante</a>
+                    <a href="{{ r.comprobante_archivo.url }}" target="_blank" class="btn btn-sm btn-link text-primary p-0 btn-ver-pdf"><i class="bi bi-eye"></i> Ver Comprobante</a>
+                    <embed src="{{ r.comprobante_archivo.url }}" type="application/pdf" class="pdf-preview-print">
+                {% else %}
+                    <p class="mt-2 text-secondary small"><em>{{ r.descripcion_alternativa|default:"Sin descripción disponible." }}</em></p>
                 {% endif %}
             </div>
         {% endfor %}
@@ -130,17 +156,19 @@
         <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Cursos Realizados</h2>
         {% for c in cursos %}
             <div class="card p-4 mb-3 border-0 shadow-sm border-start border-4 border-info rounded-4">
-                <h6 class="fw-bold mb-1">{{ c.nombrecurso }}</h6>
-                <p class="small text-muted"><strong>{{ c.nombreinstitucion }}</strong> ({{ c.numerohoras }}h)</p>
-                {% if c.certificado_pdf %}
-                    <a href="{{ c.certificado_pdf.url }}" target="_blank" class="btn btn-sm btn-outline-info">Ver Certificado</a>
+                <h6 class="fw-bold mb-1">{{ c.nombrerecurso }}</h6>
+                <p class="small text-muted"><strong>{{ c.entidadpatrocinadora }}</strong> ({{ c.totalhoras }}h)</p>
+                <p class="small mb-1">Contacto: {{ c.nombrecontactoauspicia|default:"N/A" }}</p>
+                {% if c.rutacertificado %}
+                    <a href="{{ c.rutacertificado.url }}" target="_blank" class="btn btn-sm btn-outline-info btn-ver-pdf">Ver Certificado</a>
+                    <embed src="{{ c.rutacertificado.url }}" type="application/pdf" class="pdf-preview-print">
                 {% endif %}
             </div>
         {% endfor %}
     </div>
 
     <div id="paca" class="section-view">
-        <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Productos Académicos</h2>
+        <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Prod. Académicos</h2>
         {% for i in academicos %}
             <div class="card p-4 mb-3 border-0 shadow-sm border-start border-5 border-info rounded-4">
                 <h5 class="fw-bold mb-1">{{ i.nombrerecurso }}</h5>
@@ -151,7 +179,7 @@
     </div>
 
     <div id="plab" class="section-view">
-        <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Productos Laborales</h2>
+        <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Prod. Laborales</h2>
         {% for i in laborales %}
             <div class="card p-4 mb-3 border-0 shadow-sm border-start border-5 border-success rounded-4">
                 <h5 class="fw-bold mb-1">{{ i.nombreproducto }}</h5>
@@ -173,7 +201,11 @@
                     <div class="card-body text-center">
                         <h6 class="fw-bold">{{ g.nombreproducto }}</h6>
                         <span class="badge bg-danger fs-6 mb-2">${{ g.valordelbien }}</span>
-                        <p class="small text-muted">{{ g.estadoproducto }}</p>
+                        <div>
+                            <span class="badge {% if g.estadoproducto == 'Bueno' %}bg-success{% else %}bg-warning text-dark{% endif %} px-3">
+                                {{ g.estadoproducto }}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
