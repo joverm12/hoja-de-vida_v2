@@ -96,7 +96,7 @@
         @media print {
             @page { 
                 size: A4; 
-                margin: 10mm !important; 
+                margin: 5mm !important; 
             }
             .no-print { display: none !important; }
             body { 
@@ -111,24 +111,21 @@
                 display: block !important;
             }
 
-            /* 1. ELIMINA EL ESPACIADO DE SIEMPRE (Arreglo para PDF) */
+            /* 1. SECCIONES CONTINUAS Y PEGADAS (Imagen 24be15) */
             .section-view.print-include { 
                 display: block !important; 
-                page-break-after: auto !important;
-                page-break-inside: auto !important;
                 clear: both !important; 
                 margin: 0 !important;
                 padding: 0 !important;
                 position: relative !important;
             }
+            .seccion-perfil { margin-bottom: 0 !important; padding-bottom: 0 !important; }
 
-            /* 2. FIX IMAGEN TÍTULO Y SUPERPOSICIÓN (Arreglo para Imagen 25267a y edited-image.png) */
+            /* 2. FIX IMAGEN Y SUPERPOSICIÓN (Imagen edited-image.png) */
             .pdf-preview-print { 
                 display: block !important; 
-                width: 100% !important; 
-                max-width: 650px !important;
-                height: auto !important; 
-                max-height: 450px !important; 
+                width: 90% !important; 
+                max-height: 420px !important; 
                 margin: 15px auto !important; 
                 object-fit: contain !important;
                 clear: both !important; 
@@ -136,25 +133,13 @@
                 z-index: 1 !important;
             }
 
-            /* 3. PEGAR ACERCA DE MI CON FORMACIÓN (Arreglo para Imagen 24be15) */
-            .seccion-perfil { 
-                margin-bottom: 0 !important; 
-                padding-bottom: 0 !important;
-                display: block !important;
-            }
-            #inicio .card.mb-5 { 
-                margin-top: 0 !important; 
-                padding-top: 5px !important;
-            }
-            
-            /* 4. TARJETAS COMPACTAS Y TEXTO SIEMPRE ARRIBA */
+            /* 3. TARJETAS QUE RESPETAN EL FLUJO */
             .card { 
                 border: 1px solid #eee !important; 
                 break-inside: avoid !important; 
-                margin-bottom: 10px !important; 
+                margin-bottom: 8px !important; 
                 padding: 12px !important;
                 display: block !important;
-                float: none !important;
                 position: relative !important;
                 background: white !important;
                 clear: both !important;
@@ -164,14 +149,14 @@
                 white-space: normal !important; 
                 word-wrap: break-word !important; 
                 text-align: justify; 
-                line-height: 1.2 !important;
+                line-height: 1.3 !important;
                 position: relative !important;
                 z-index: 2 !important;
             }
             
+            .mb-5, .mb-4, .py-5 { margin-bottom: 5px !important; padding: 5px !important; }
             h1, h2, h5 { margin-bottom: 4px !important; margin-top: 4px !important; }
             .btn-ver-pdf { display: none !important; }
-            .mb-5, .mb-4, .py-5 { margin-bottom: 5px !important; padding: 5px !important; }
         }
     </style>
 </head>
@@ -265,10 +250,16 @@
                     <h6>{{ p.universidad }}</h6>
                     <span class="badge bg-primary-subtle text-primary border px-3 mb-3">{{ p.periodo_u }}</span>
                     <p class="mb-2"><strong>Estado:</strong> {{ p.bachillerato_status }}</p>
-                    {% if p.certificado_bachiller_pdf %}
-                        <a href="{{ p.certificado_bachiller_pdf.url }}" target="_blank" class="btn btn-sm btn-outline-danger btn-ver-pdf no-print">Ver Título PDF</a>
-                    {% endif %}
-                    {% if p.vista_previa_titulo %} <img src="{{ p.vista_previa_titulo.url }}" class="pdf-preview-print"> {% endif %}
+                    
+                    <div style="clear: both; display: block; width: 100%;">
+                        {% if p.certificado_bachiller_pdf %}
+                            <a href="{{ p.certificado_bachiller_pdf.url }}" target="_blank" class="btn btn-sm btn-outline-danger btn-ver-pdf no-print">Ver Título PDF</a>
+                        {% endif %}
+                        {% if p.vista_previa_titulo %} 
+                            <img src="{{ p.vista_previa_titulo.url }}" class="pdf-preview-print"> 
+                        {% endif %}
+                    </div>
+                    <div style="clear: both;"></div>
                 </div>
             </div>
             <div class="col-md-5">
@@ -292,10 +283,15 @@
                     <div class="col-md-6">{% if e.telefonocontactoempresarial %}<i class="bi bi-telephone"></i> {{ e.telefonocontactoempresarial }}{% endif %}</div>
                 </div>
                 <small class="text-muted d-block mb-2"><strong>Periodo:</strong> {{ e.fechainiciogestion }} a {{ e.fechafingestion|default:"Actualidad" }}</small>
-                {% if e.rutacertificado %}
-                    <a href="{{ e.rutacertificado.url }}" target="_blank" class="btn btn-sm btn-link text-primary p-0 btn-ver-pdf no-print">Ver Certificado</a>
-                {% endif %}
-                {% if e.vista_previa_exp %} <img src="{{ e.vista_previa_exp.url }}" class="pdf-preview-print"> {% endif %}
+                
+                <div style="clear: both; display: block; width: 100%;">
+                    {% if e.rutacertificado %}
+                        <a href="{{ e.rutacertificado.url }}" target="_blank" class="btn btn-sm btn-link text-primary p-0 btn-ver-pdf no-print">Ver Certificado</a>
+                    {% endif %}
+                    {% if e.vista_previa_exp %} <img src="{{ e.vista_previa_exp.url }}" class="pdf-preview-print"> {% endif %}
+                </div>
+                <div style="clear: both;"></div>
+                
                 <p class="mt-2 text-wrap-print" style="text-align: justify;">{{ e.descripcionfunciones }}</p>
             </div>
         {% endfor %}
@@ -306,10 +302,13 @@
             <div class="card p-4 mb-3 border-0 shadow-sm bg-light rounded-4">
                 <h6 class="fw-bold mb-1">{{ r.nombrereconocimiento }}</h6>
                 <p class="small text-muted">{{ r.institucionqueotorga }} ({{ r.fechareconocimiento }})</p>
-                {% if r.comprobante_archivo %}
-                    <a href="{{ r.comprobante_archivo.url }}" target="_blank" class="btn btn-sm btn-link text-primary p-0 btn-ver-pdf no-print">Ver Comprobante</a>
-                {% endif %}
-                {% if r.vista_previa_reco %} <img src="{{ r.vista_previa_reco.url }}" class="pdf-preview-print"> {% endif %}
+                <div style="clear: both; display: block; width: 100%;">
+                    {% if r.comprobante_archivo %}
+                        <a href="{{ r.comprobante_archivo.url }}" target="_blank" class="btn btn-sm btn-link text-primary p-0 btn-ver-pdf no-print">Ver Comprobante</a>
+                    {% endif %}
+                    {% if r.vista_previa_reco %} <img src="{{ r.vista_previa_reco.url }}" class="pdf-preview-print"> {% endif %}
+                </div>
+                <div style="clear: both;"></div>
                 <p class="mt-2 text-wrap-print">{{ r.descripcion }}</p>
             </div>
         {% endfor %}
@@ -321,10 +320,13 @@
                 <h6 class="fw-bold mb-1">{{ c.nombrerecurso }}</h6>
                 <p class="small text-muted"><strong>{{ c.entidadpatrocinadora }}</strong></p>
                 <small class="text-muted d-block mb-2"><strong>Periodo:</strong> {{ c.fechainicio }} a {{ c.fechafin }} ({{ c.totalhoras }}h)</small>
-                {% if c.rutacertificado %}
-                    <a href="{{ c.rutacertificado.url }}" target="_blank" class="btn btn-sm btn-outline-info btn-ver-pdf no-print">Ver Certificado</a>
-                {% endif %}
-                {% if c.vista_previa_cur %} <img src="{{ c.vista_previa_cur.url }}" class="pdf-preview-print"> {% endif %}
+                <div style="clear: both; display: block; width: 100%;">
+                    {% if c.rutacertificado %}
+                        <a href="{{ c.rutacertificado.url }}" target="_blank" class="btn btn-sm btn-outline-info btn-ver-pdf no-print">Ver Certificado</a>
+                    {% endif %}
+                    {% if c.vista_previa_cur %} <img src="{{ c.vista_previa_cur.url }}" class="pdf-preview-print"> {% endif %}
+                </div>
+                <div style="clear: both;"></div>
             </div>
         {% endfor %}
     </div>
@@ -357,17 +359,14 @@
                     {% if g.foto_producto %} <img src="{{ g.foto_producto.url }}" class="card-img-top" style="height: 180px; object-fit: cover;"> {% endif %}
                     <div class="card-body text-center">
                         <h6 class="fw-bold">{{ g.nombreproducto }}</h6>
-                        
                         {% if g.estadoproducto == 'Bueno' %}
                             <span class="badge bg-success mb-2">Estado: {{ g.estadoproducto }}</span>
                         {% else %}
                             <span class="badge bg-warning text-dark mb-2">Estado: {{ g.estadoproducto }}</span>
                         {% endif %}
-
                         <div class="mb-2">
                              <span class="badge bg-danger fs-6 mb-2">${{ g.valordelbien }}</span>
                         </div>
-
                         <p class="small text-muted text-wrap-print">{{ g.descripcion|default:"" }}</p>
                         <small class="text-muted d-block mt-2">Publicado: {{ g.fecha_publicacion|date:"Y" }}</small>
                     </div>
