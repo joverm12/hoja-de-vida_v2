@@ -113,14 +113,19 @@
 
             /* 1. SECCIONES COMO BLOQUES SÓLIDOS (ELIMINA EL HUECO BLANCO - Imagen 24be15) */
             .section-view.print-include { 
-                display: table !important; /* Fuerza a ocupar su espacio real */
+                display: table !important; /* Fuerza a ocupar su espacio real y empujar lo de abajo */
                 width: 100% !important;
                 clear: both !important; 
                 margin: 0 !important;
                 padding: 0 !important;
                 position: relative !important;
             }
-            .seccion-perfil { margin-bottom: 0 !important; padding-bottom: 0 !important; display: table !important; width: 100% !important; }
+            .seccion-perfil { 
+                margin-bottom: 0 !important; 
+                padding-bottom: 0 !important; 
+                display: table !important; 
+                width: 100% !important; 
+            }
 
             /* 2. FIX IMAGEN RÍGIDA (ELIMINA SUPERPOSICIÓN - Imagen edited-image.png) */
             .pdf-preview-print { 
@@ -130,7 +135,7 @@
                 height: auto !important; 
                 max-height: 350px !important; 
                 margin: 15px auto !important; 
-                clear: both !important; /* Nadie se le puede subir a los lados */
+                clear: both !important; /* Nadie se le puede subir a los lados ni encima */
                 position: relative !important;
                 z-index: 1 !important;
             }
@@ -362,14 +367,17 @@
                     {% if g.foto_producto %} <img src="{{ g.foto_producto.url }}" class="card-img-top" style="height: 180px; object-fit: cover;"> {% endif %}
                     <div class="card-body text-center">
                         <h6 class="fw-bold">{{ g.nombreproducto }}</h6>
+                        
                         {% if g.estadoproducto == 'Bueno' %}
                             <span class="badge bg-success mb-2">Estado: {{ g.estadoproducto }}</span>
                         {% else %}
                             <span class="badge bg-warning text-dark mb-2">Estado: {{ g.estadoproducto }}</span>
                         {% endif %}
+
                         <div class="mb-2">
                              <span class="badge bg-danger fs-6 mb-2">${{ g.valordelbien }}</span>
                         </div>
+
                         <p class="small text-muted text-wrap-print">{{ g.descripcion|default:"" }}</p>
                         <small class="text-muted d-block mt-2">Publicado: {{ g.fecha_publicacion|date:"Y" }}</small>
                     </div>
