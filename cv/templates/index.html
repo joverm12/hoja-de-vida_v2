@@ -96,7 +96,7 @@
         @media print {
             @page { 
                 size: A4; 
-                margin: 5mm !important; 
+                margin: 8mm !important; 
             }
             .no-print { display: none !important; }
             body { 
@@ -111,7 +111,7 @@
                 display: block !important;
             }
 
-            /* 1. SECCIONES CONTINUAS Y PEGADAS (Imagen 24be15) */
+            /* 1. ELIMINA EL ESPACIADO DE SIEMPRE (Fix Imagen 24be15) */
             .section-view.print-include { 
                 display: block !important; 
                 clear: both !important; 
@@ -120,11 +120,14 @@
                 position: relative !important;
             }
             .seccion-perfil { margin-bottom: 0 !important; padding-bottom: 0 !important; }
+            #inicio .card.mb-5 { margin-top: 0 !important; padding-top: 5px !important; }
 
-            /* 2. FIX IMAGEN Y SUPERPOSICIÓN (Imagen edited-image.png) */
+            /* 2. FIX SUPERPOSICIÓN: IMAGEN COMO BLOQUE RÍGIDO (Fix Imagen edited-image.png) */
             .pdf-preview-print { 
                 display: block !important; 
-                width: 90% !important; 
+                width: 100% !important; 
+                max-width: 600px !important;
+                height: auto !important; 
                 max-height: 420px !important; 
                 margin: 15px auto !important; 
                 object-fit: contain !important;
@@ -133,23 +136,23 @@
                 z-index: 1 !important;
             }
 
-            /* 3. TARJETAS QUE RESPETAN EL FLUJO */
+            /* 3. TARJETAS QUE EMPUJAN EL CONTENIDO */
             .card { 
                 border: 1px solid #eee !important; 
                 break-inside: avoid !important; 
-                margin-bottom: 8px !important; 
-                padding: 12px !important;
-                display: block !important;
-                position: relative !important;
-                background: white !important;
+                margin-bottom: 10px !important; 
+                padding: 15px !important;
+                display: inline-table !important; /* Fuerza al navegador a respetar el espacio */
+                width: 100% !important;
                 clear: both !important;
+                background: white !important;
             }
             
             .text-wrap-print { 
                 white-space: normal !important; 
                 word-wrap: break-word !important; 
                 text-align: justify; 
-                line-height: 1.3 !important;
+                line-height: 1.2 !important;
                 position: relative !important;
                 z-index: 2 !important;
             }
@@ -251,7 +254,7 @@
                     <span class="badge bg-primary-subtle text-primary border px-3 mb-3">{{ p.periodo_u }}</span>
                     <p class="mb-2"><strong>Estado:</strong> {{ p.bachillerato_status }}</p>
                     
-                    <div style="clear: both; display: block; width: 100%;">
+                    <div style="clear: both; display: block; width: 100%; text-align: center;">
                         {% if p.certificado_bachiller_pdf %}
                             <a href="{{ p.certificado_bachiller_pdf.url }}" target="_blank" class="btn btn-sm btn-outline-danger btn-ver-pdf no-print">Ver Título PDF</a>
                         {% endif %}
@@ -359,14 +362,17 @@
                     {% if g.foto_producto %} <img src="{{ g.foto_producto.url }}" class="card-img-top" style="height: 180px; object-fit: cover;"> {% endif %}
                     <div class="card-body text-center">
                         <h6 class="fw-bold">{{ g.nombreproducto }}</h6>
+                        
                         {% if g.estadoproducto == 'Bueno' %}
                             <span class="badge bg-success mb-2">Estado: {{ g.estadoproducto }}</span>
                         {% else %}
                             <span class="badge bg-warning text-dark mb-2">Estado: {{ g.estadoproducto }}</span>
                         {% endif %}
+
                         <div class="mb-2">
                              <span class="badge bg-danger fs-6 mb-2">${{ g.valordelbien }}</span>
                         </div>
+
                         <p class="small text-muted text-wrap-print">{{ g.descripcion|default:"" }}</p>
                         <small class="text-muted d-block mt-2">Publicado: {{ g.fecha_publicacion|date:"Y" }}</small>
                     </div>
