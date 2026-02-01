@@ -7,125 +7,37 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
-        :root {
-            --sidebar-bg: #1e293b;
-            --accent: #38bdf8;
-        }
-        body {
-            display: flex;
-            background: #f1f5f9;
-            font-family: 'Inter', sans-serif;
-            min-height: 100vh;
-        }
-        .sidebar {
-            width: 280px;
-            background: var(--sidebar-bg);
-            height: 100vh;
-            position: fixed;
-            color: white;
-            padding: 25px;
-            z-index: 100;
-            overflow-y: auto;
-        }
-        .main {
-            margin-left: 280px;
-            width: calc(100% - 280px);
-            padding: 40px;
-        }
-        .nav-btn {
-            width: 100%;
-            text-align: left;
-            padding: 12px;
-            margin-bottom: 8px;
-            border-radius: 12px;
-            color: #94a3b8;
-            border: none;
-            background: none;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .nav-btn:hover, .btn-active {
-            background: #334155;
-            color: var(--accent);
-        }
-        .section-view {
-            display: none;
-            background: white;
-            padding: 40px;
-            border-radius: 24px;
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-        }
-        .active {
-            display: block;
-            animation: fadeIn 0.4s ease-out;
-        }
-        .profile-img {
-            width: 180px;
-            height: 180px;
-            object-fit: cover;
-            border: 6px solid white;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-        .badge-skill {
-            background: #f0f9ff;
-            color: #0369a1;
-            padding: 8px 16px;
-            border-radius: 50px;
-            margin: 4px;
-            display: inline-block;
-            font-weight: 500;
-            border: 1px solid #bae6fd;
-        }
-        .pdf-preview-print {
-            display: none;
-            width: 100%;
-            max-height: 400px;
-            object-fit: contain;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            margin-top: 10px;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        :root { --sidebar-bg: #1e293b; --accent: #38bdf8; }
+        body { display: flex; background: #f1f5f9; font-family: 'Inter', sans-serif; min-height: 100vh; }
+        .sidebar { width: 280px; background: var(--sidebar-bg); height: 100vh; position: fixed; color: white; padding: 25px; z-index: 100; overflow-y: auto; }
+        .main { margin-left: 280px; width: calc(100% - 280px); padding: 40px; }
+        .nav-btn { width: 100%; text-align: left; padding: 12px; margin-bottom: 8px; border-radius: 12px; color: #94a3b8; border: none; background: none; cursor: pointer; transition: 0.3s; }
+        .nav-btn:hover, .btn-active { background: #334155; color: var(--accent); }
+        .section-view { display: none; background: white; padding: 40px; border-radius: 24px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); word-wrap: break-word; overflow-wrap: break-word; }
+        .active { display: block; animation: fadeIn 0.4s ease-out; }
+        .profile-img { width: 180px; height: 180px; object-fit: cover; border: 6px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .badge-skill { background: #f0f9ff; color: #0369a1; padding: 8px 16px; border-radius: 50px; margin: 4px; display: inline-block; font-weight: 500; border: 1px solid #bae6fd; }
+        .pdf-preview-print { display: none; width: 100%; max-height: 400px; object-fit: contain; border: 1px solid #ddd; border-radius: 12px; margin-top: 10px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* CONFIGURACIÓN MAESTRA DE DESCARGA PDF - VICTORIA MAGISTRAL */
         @media print {
-            @page { 
-                size: A4; 
-                margin: 10mm !important; 
-            }
+            @page { size: A4; margin: 8mm !important; }
             .no-print { display: none !important; }
-            body { 
-                background: white !important; 
-                display: block !important; 
-                -webkit-print-color-adjust: exact !important;
-            }
-            .main { 
-                margin-left: 0 !important; 
-                width: 100% !important; 
-                padding: 0 !important; 
-                display: block !important;
-            }
+            body { background: white !important; display: block !important; -webkit-print-color-adjust: exact !important; }
+            .main { margin-left: 0 !important; width: 100% !important; padding: 0 !important; display: block !important; }
 
-            /* 1. SECCIONES COMO BLOQUES SÓLIDOS (ELIMINA EL HUECO BLANCO - Imagen 24be15) */
+            /* 1. SECCIONES PEGADAS (ELIMINA EL HUECO BLANCO - Imagen 24be15) */
             .section-view.print-include { 
-                display: table !important; /* Fuerza a ocupar su espacio real */
+                display: inline-table !important; /* Fuerza a pegar los bloques */
                 width: 100% !important;
                 clear: both !important; 
                 margin: 0 !important;
                 padding: 0 !important;
                 position: relative !important;
             }
-            .seccion-perfil { 
-                margin-bottom: 0 !important; 
-                padding-bottom: 0 !important; 
-                display: table !important; 
-                width: 100% !important; 
-            }
+            .seccion-perfil { margin-bottom: 0 !important; padding-bottom: 0 !important; display: inline-table !important; width: 100% !important; }
+            #inicio .card.mb-5 { margin-top: 0 !important; padding-top: 5px !important; }
 
             /* 2. FIX IMAGEN RÍGIDA (ELIMINA SUPERPOSICIÓN - Imagen edited-image.png) */
             .pdf-preview-print { 
@@ -135,33 +47,24 @@
                 height: auto !important; 
                 max-height: 320px !important; 
                 margin: 15px auto !important; 
-                clear: both !important; /* Nadie se le puede subir a los lados ni encima */
+                clear: both !important; 
                 position: relative !important;
                 z-index: 1 !important;
             }
 
-            /* 3. TARJETAS QUE RESPETAN EL FLUJO */
+            /* 3. TARJETAS COMPACTAS */
             .card { 
                 border: 1px solid #eee !important; 
                 break-inside: avoid !important; 
                 margin-bottom: 8px !important; 
                 padding: 12px !important;
-                display: table !important; /* Bloque inquebrantable */
+                display: inline-table !important; 
                 width: 100% !important;
                 clear: both !important;
-                position: relative !important;
-                z-index: 2 !important; /* Texto siempre arriba si hay roce */
                 background: white !important;
             }
             
-            .text-wrap-print { 
-                white-space: normal !important; 
-                word-wrap: break-word !important; 
-                text-align: justify; 
-                line-height: 1.3 !important;
-                display: block !important;
-            }
-            
+            .text-wrap-print { white-space: normal !important; word-wrap: break-word !important; text-align: justify; line-height: 1.2 !important; display: block !important; }
             h1, h2, h5 { margin-bottom: 4px !important; margin-top: 4px !important; }
             .btn-ver-pdf { display: none !important; }
             .mb-5, .mb-4, .py-5 { margin-bottom: 5px !important; padding: 5px !important; }
@@ -258,7 +161,6 @@
                     <h6>{{ p.universidad }}</h6>
                     <span class="badge bg-primary-subtle text-primary border px-3 mb-3">{{ p.periodo_u }}</span>
                     <p class="mb-2"><strong>Estado:</strong> {{ p.bachillerato_status }}</p>
-                    
                     <div style="clear: both; display: block; width: 100%; text-align: center;">
                         {% if p.certificado_bachiller_pdf %}
                             <a href="{{ p.certificado_bachiller_pdf.url }}" target="_blank" class="btn btn-sm btn-outline-danger btn-ver-pdf no-print">Ver Título PDF</a>
@@ -291,7 +193,6 @@
                     <div class="col-md-6">{% if e.telefonocontactoempresarial %}<i class="bi bi-telephone"></i> {{ e.telefonocontactoempresarial }}{% endif %}</div>
                 </div>
                 <small class="text-muted d-block mb-2"><strong>Periodo:</strong> {{ e.fechainiciogestion }} a {{ e.fechafingestion|default:"Actualidad" }}</small>
-                
                 <div style="clear: both; display: block; width: 100%;">
                     {% if e.rutacertificado %}
                         <a href="{{ e.rutacertificado.url }}" target="_blank" class="btn btn-sm btn-link text-primary p-0 btn-ver-pdf no-print">Ver Certificado</a>
@@ -299,89 +200,9 @@
                     {% if e.vista_previa_exp %} <img src="{{ e.vista_previa_exp.url }}" class="pdf-preview-print"> {% endif %}
                 </div>
                 <div style="clear: both;"></div>
-                
                 <p class="mt-2 text-wrap-print" style="text-align: justify;">{{ e.descripcionfunciones }}</p>
             </div>
         {% endfor %}
-    </div>
-    <div id="reco" class="section-view print-include">
-        <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Reconocimientos</h2>
-        {% for r in reconocimientos %}
-            <div class="card p-4 mb-3 border-0 shadow-sm bg-light rounded-4">
-                <h6 class="fw-bold mb-1">{{ r.nombrereconocimiento }}</h6>
-                <p class="small text-muted">{{ r.institucionqueotorga }} ({{ r.fechareconocimiento }})</p>
-                <div style="clear: both; display: block; width: 100%;">
-                    {% if r.comprobante_archivo %}
-                        <a href="{{ r.comprobante_archivo.url }}" target="_blank" class="btn btn-sm btn-link text-primary p-0 btn-ver-pdf no-print">Ver Comprobante</a>
-                    {% endif %}
-                    {% if r.vista_previa_reco %} <img src="{{ r.vista_previa_reco.url }}" class="pdf-preview-print"> {% endif %}
-                </div>
-                <div style="clear: both;"></div>
-                <p class="mt-2 text-wrap-print">{{ r.descripcion }}</p>
-            </div>
-        {% endfor %}
-    </div>
-    <div id="cur" class="section-view print-include">
-        <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Cursos Realizados</h2>
-        {% for c in cursos %}
-            <div class="card p-4 mb-3 border-0 shadow-sm border-start border-4 border-info rounded-4">
-                <h6 class="fw-bold mb-1">{{ c.nombrerecurso }}</h6>
-                <p class="small text-muted"><strong>{{ c.entidadpatrocinadora }}</strong></p>
-                <small class="text-muted d-block mb-2"><strong>Periodo:</strong> {{ c.fechainicio }} a {{ c.fechafin }} ({{ c.totalhoras }}h)</small>
-                <div style="clear: both; display: block; width: 100%;">
-                    {% if c.rutacertificado %}
-                        <a href="{{ c.rutacertificado.url }}" target="_blank" class="btn btn-sm btn-outline-info btn-ver-pdf no-print">Ver Certificado</a>
-                    {% endif %}
-                    {% if c.vista_previa_cur %} <img src="{{ c.vista_previa_cur.url }}" class="pdf-preview-print"> {% endif %}
-                </div>
-                <div style="clear: both;"></div>
-            </div>
-        {% endfor %}
-    </div>
-    <div id="paca" class="section-view print-include">
-        <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Prod. Académicos</h2>
-        {% for i in academicos %}
-            <div class="card p-4 mb-3 border-0 shadow-sm border-start border-5 border-info rounded-4">
-                <h5 class="fw-bold mb-1">{{ i.nombrerecurso }}</h5>
-                <p class="text-muted small mb-2">Categoría: {{ i.clasificador }}</p>
-                <p class="mb-0 text-secondary text-wrap-print">{{ i.descripcion }}</p>
-            </div>
-        {% endfor %}
-    </div>
-    <div id="plab" class="section-view print-include">
-        <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Prod. Laborales</h2>
-        {% for i in laborales %}
-            <div class="card p-4 mb-3 border-0 shadow-sm border-start border-5 border-success rounded-4">
-                <h5 class="fw-bold mb-1">{{ i.nombreproducto }}</h5>
-                <small class="text-muted d-block mb-2">Fecha: {{ i.fechaproducto }}</small>
-                <p class="text-secondary small mb-0 border-top pt-2 text-wrap-print">{{ i.descripcion }}</p>
-            </div>
-        {% endfor %}
-    </div>
-    <div id="gar" class="section-view print-include">
-        <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Venta Garage</h2>
-        <div class="row g-4">
-            {% for g in garage %}
-            <div class="col-md-4">
-                <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden">
-                    {% if g.foto_producto %} <img src="{{ g.foto_producto.url }}" class="card-img-top" style="height: 180px; object-fit: cover;"> {% endif %}
-                    <div class="card-body text-center">
-                        <h6 class="fw-bold">{{ g.nombreproducto }}</h6>
-                        {% if g.estadoproducto == 'Bueno' %}
-                            <span class="badge bg-success mb-2">Estado: {{ g.estadoproducto }}</span>
-                        {% else %}
-                            <span class="badge bg-warning text-dark mb-2">Estado: {{ g.estadoproducto }}</span>
-                        {% endif %}
-                        <div class="mb-2">
-                             <span class="badge bg-danger fs-6 mb-2">${{ g.valordelbien }}</span>
-                        </div>
-                        <p class="small text-muted text-wrap-print">{{ g.descripcion|default:"" }}</p>
-                        <small class="text-muted d-block mt-2">Publicado: {{ g.fecha_publicacion|date:"Y" }}</small>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
     </div>
     {% endif %}
 </div>
