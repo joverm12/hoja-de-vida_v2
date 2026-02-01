@@ -106,11 +106,21 @@ class ProductoLaboral(models.Model):
     activarparaqueseveaenfront = models.BooleanField(default=True)
 
 # 8. VENTA GARAGE
+# 8. VENTA GARAGE (VERSION FINAL)
 class VentaGarage(models.Model):
     ESTADO_CHOICES = [('Bueno', 'Bueno'), ('Regular', 'Regular')]
     perfil = models.ForeignKey(DatosPersonales, on_delete=models.CASCADE)
     nombreproducto = models.CharField(max_length=100)
     estadoproducto = models.CharField(max_length=40, choices=ESTADO_CHOICES, default='Bueno')
     valordelbien = models.DecimalField(max_digits=10, decimal_places=2)
+    
+    # NUEVO: Descripción sin límite de caracteres (TextField)
+    descripcion = models.TextField(blank=True, null=True) 
+    
+    # NUEVO: Fecha con selector de año completo
+    fecha_publicacion = models.DateField(default=timezone.now)
+    
     foto_producto = CloudinaryField('imagen', folder='garage/', null=True, blank=True)
     activarparaqueseveaenfront = models.BooleanField(default=True)
+
+    def __str__(self): return self.nombreproducto

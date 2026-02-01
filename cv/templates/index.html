@@ -97,7 +97,6 @@
             body { background: white !important; display: block !important; }
             .main { margin-left: 0 !important; width: 100% !important; padding: 0 !important; }
             
-            /* PEGAR LAS SECCIONES Y ELIMINAR HUECOS BLANCOS */
             .section-view { 
                 display: none !important; 
                 padding: 0 !important; 
@@ -107,7 +106,6 @@
             .section-view.print-include { display: block !important; page-break-inside: auto !important; }
             .pdf-preview-print { display: block !important; margin: 10px auto; page-break-inside: avoid; }
             
-            /* AJUSTE DE TARJETAS PARA QUE NO DEJEN ESPACIO */
             .card { 
                 border: 1px solid #eee !important; 
                 break-inside: avoid; 
@@ -118,7 +116,6 @@
             .mb-5 { margin-bottom: 5px !important; }
             .mt-3 { margin-top: 0 !important; }
             
-            /* ARREGLO DE TEXTO CORTADO Y FLUIDO */
             .text-wrap-print { 
                 white-space: normal !important; 
                 word-wrap: break-word !important; 
@@ -314,7 +311,19 @@
                     {% if g.foto_producto %} <img src="{{ g.foto_producto.url }}" class="card-img-top" style="height: 180px; object-fit: cover;"> {% endif %}
                     <div class="card-body text-center">
                         <h6 class="fw-bold">{{ g.nombreproducto }}</h6>
-                        <span class="badge bg-danger fs-6 mb-2">${{ g.valordelbien }}</span>
+                        
+                        {% if g.estadoproducto == 'Bueno' %}
+                            <span class="badge bg-success mb-2">Estado: {{ g.estadoproducto }}</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark mb-2">Estado: {{ g.estadoproducto }}</span>
+                        {% endif %}
+
+                        <div class="mb-2">
+                             <span class="badge bg-danger fs-6 mb-2">${{ g.valordelbien }}</span>
+                        </div>
+
+                        <p class="small text-muted text-wrap-print">{{ g.descripcion|default:"" }}</p>
+                        <small class="text-muted d-block mt-2">Publicado: {{ g.fecha_publicacion|date:"d/m/Y" }}</small>
                     </div>
                 </div>
             </div>
