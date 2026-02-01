@@ -111,7 +111,7 @@
                 display: block !important;
             }
             
-            /* 1. ELIMINAR HUECOS BLANCOS (Imagen 25aad2 y 25aa5b) */
+            /* 1. ELIMINAR HUECOS BLANCOS (Arreglo para PDF) */
             .section-view { 
                 display: none !important; 
                 padding: 0 !important; 
@@ -127,7 +127,7 @@
                 padding-top: 5px !important;
             }
 
-            /* 2. PEGAR ACERCA DE MI CON FORMACIÓN (Imagen 25ad7c) */
+            /* 2. ESPACIO JUSTO: PEGAR ACERCA DE MI CON FORMACIÓN (Imagen 25ad7c) */
             .seccion-perfil { margin-bottom: 0 !important; padding-bottom: 0 !important; }
             #inicio .card.mb-5 { margin-top: 5px !important; margin-bottom: 10px !important; }
             
@@ -137,14 +137,18 @@
                 width: 100% !important; 
                 max-height: none !important; 
                 margin: 10px auto !important; 
+                position: relative !important;
+                z-index: 1 !important;
             }
             
-            /* 4. AJUSTE DE TARJETAS Y TEXTO */
+            /* 4. AJUSTE DE TARJETAS Y TEXTO PARA QUE NO CHOCQUEN (Imagen 25267a) */
             .card { 
                 border: 1px solid #eee !important; 
                 break-inside: avoid !important; 
                 margin-bottom: 8px !important; 
                 padding: 15px !important; 
+                position: relative !important;
+                background: white !important;
             }
             .row { 
                 display: flex !important; 
@@ -163,6 +167,8 @@
                 text-align: justify; 
                 display: block !important; 
                 line-height: 1.3 !important;
+                position: relative !important;
+                z-index: 2 !important;
             }
             h1, h2, h5 { margin-bottom: 4px !important; margin-top: 4px !important; }
             .btn-ver-pdf { display: none !important; }
