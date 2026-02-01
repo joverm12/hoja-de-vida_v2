@@ -54,6 +54,8 @@
             padding: 40px;
             border-radius: 24px;
             box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         .active {
             display: block;
@@ -101,9 +103,11 @@
             /* ELIMINAR ESPACIO ENTRE ACERCA DE MI E INFO PERSONAL */
             .row { display: flex !important; flex-wrap: wrap !important; margin: 0 !important; }
             .mb-5 { margin-bottom: 10px !important; }
+            .mt-3 { margin-top: 0 !important; }
             /* ARREGLO DE TEXTO CORTADO */
-            .text-wrap-print { white-space: normal !important; word-wrap: break-word !important; word-break: normal !important; text-align: justify; }
+            .text-wrap-print { white-space: normal !important; word-wrap: break-word !important; word-break: normal !important; text-align: justify; display: block !important; }
             h1, h2, h5 { margin-bottom: 5px !important; margin-top: 5px !important; }
+            .btn-ver-pdf { display: none !important; }
         }
     </style>
 </head>
@@ -197,6 +201,9 @@
                     <h6>{{ p.universidad }}</h6>
                     <span class="badge bg-primary-subtle text-primary border px-3 mb-3">{{ p.periodo_u }}</span>
                     <p class="mb-2"><strong>Estado:</strong> {{ p.bachillerato_status }}</p>
+                    {% if p.certificado_bachiller_pdf %}
+                        <a href="{{ p.certificado_bachiller_pdf.url }}" target="_blank" class="btn btn-sm btn-outline-danger btn-ver-pdf no-print">Ver Título PDF</a>
+                    {% endif %}
                     {% if p.vista_previa_titulo %} <img src="{{ p.vista_previa_titulo.url }}" class="pdf-preview-print"> {% endif %}
                 </div>
             </div>
@@ -221,6 +228,9 @@
                     <div class="col-md-6">{% if e.telefonocontactoempresarial %}<i class="bi bi-telephone"></i> {{ e.telefonocontactoempresarial }}{% endif %}</div>
                 </div>
                 <small class="text-muted d-block mb-2"><strong>Periodo:</strong> {{ e.fechainiciogestion }} a {{ e.fechafingestion|default:"Actualidad" }}</small>
+                {% if e.rutacertificado %}
+                    <a href="{{ e.rutacertificado.url }}" target="_blank" class="btn btn-sm btn-link text-primary p-0 btn-ver-pdf no-print">Ver Certificado</a>
+                {% endif %}
                 {% if e.vista_previa_exp %} <img src="{{ e.vista_previa_exp.url }}" class="pdf-preview-print"> {% endif %}
                 <p class="mt-2 text-wrap-print" style="text-align: justify;">{{ e.descripcionfunciones }}</p>
             </div>
@@ -232,6 +242,9 @@
             <div class="card p-4 mb-3 border-0 shadow-sm bg-light rounded-4">
                 <h6 class="fw-bold mb-1">{{ r.nombrereconocimiento }}</h6>
                 <p class="small text-muted">{{ r.institucionqueotorga }} ({{ r.fechareconocimiento }})</p>
+                {% if r.comprobante_archivo %}
+                    <a href="{{ r.comprobante_archivo.url }}" target="_blank" class="btn btn-sm btn-link text-primary p-0 btn-ver-pdf no-print">Ver Comprobante</a>
+                {% endif %}
                 {% if r.vista_previa_reco %} <img src="{{ r.vista_previa_reco.url }}" class="pdf-preview-print"> {% endif %}
                 <p class="mt-2 text-wrap-print">{{ r.descripcion }}</p>
             </div>
@@ -244,6 +257,9 @@
                 <h6 class="fw-bold mb-1">{{ c.nombrerecurso }}</h6>
                 <p class="small text-muted"><strong>{{ c.entidadpatrocinadora }}</strong></p>
                 <small class="text-muted d-block mb-2"><strong>Periodo:</strong> {{ c.fechainicio }} a {{ c.fechafin }} ({{ c.totalhoras }}h)</small>
+                {% if c.rutacertificado %}
+                    <a href="{{ c.rutacertificado.url }}" target="_blank" class="btn btn-sm btn-outline-info btn-ver-pdf no-print">Ver Certificado</a>
+                {% endif %}
                 {% if c.vista_previa_cur %} <img src="{{ c.vista_previa_cur.url }}" class="pdf-preview-print"> {% endif %}
             </div>
         {% endfor %}
