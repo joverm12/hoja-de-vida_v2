@@ -111,7 +111,7 @@
                 display: block !important;
             }
 
-            /* 1. ELIMINA EL ESPACIADO DE SIEMPRE (Imagen 24be15) */
+            /* 1. ELIMINA EL ESPACIADO DE SIEMPRE (Arreglo para PDF) */
             .section-view.print-include { 
                 display: block !important; 
                 page-break-after: auto !important;
@@ -122,7 +122,7 @@
                 position: relative !important;
             }
 
-            /* 2. FIX IMAGEN TÍTULO Y SUPERPOSICIÓN (Imagen 25267a y edited-image.png) */
+            /* 2. FIX IMAGEN TÍTULO Y SUPERPOSICIÓN (Arreglo para Imagen 25267a y edited-image.png) */
             .pdf-preview-print { 
                 display: block !important; 
                 width: 100% !important; 
@@ -136,9 +136,16 @@
                 z-index: 1 !important;
             }
 
-            /* 3. PEGAR ACERCA DE MI CON FORMACIÓN (Imagen 24be15) */
-            .seccion-perfil { margin-bottom: 0 !important; padding-bottom: 0 !important; }
-            #inicio .card.mb-5 { margin-top: 0 !important; padding-top: 5px !important; }
+            /* 3. PEGAR ACERCA DE MI CON FORMACIÓN (Arreglo para Imagen 24be15) */
+            .seccion-perfil { 
+                margin-bottom: 0 !important; 
+                padding-bottom: 0 !important;
+                display: block !important;
+            }
+            #inicio .card.mb-5 { 
+                margin-top: 0 !important; 
+                padding-top: 5px !important;
+            }
             
             /* 4. TARJETAS COMPACTAS Y TEXTO SIEMPRE ARRIBA */
             .card { 
@@ -162,9 +169,9 @@
                 z-index: 2 !important;
             }
             
-            .mb-5, .mb-4, .py-5 { margin-bottom: 5px !important; padding: 5px !important; }
             h1, h2, h5 { margin-bottom: 4px !important; margin-top: 4px !important; }
             .btn-ver-pdf { display: none !important; }
+            .mb-5, .mb-4, .py-5 { margin-bottom: 5px !important; padding: 5px !important; }
         }
     </style>
 </head>

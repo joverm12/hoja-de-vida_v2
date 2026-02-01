@@ -2,20 +2,23 @@ from django.shortcuts import render
 from .models import *
 
 def home(request):
-    # Obtenemos el perfil (el primero que encuentre)
+    # Obtenemos el perfil
     perfil = DatosPersonales.objects.first()
     
-    # Convertimos el texto de aptitudes en una lista para el HTML
-    skills = perfil.aptitudes.split(',') if perfil and perfil.aptitudes else []
+    # LIMPIEZA: Eliminamos espacios al inicio/final para quitar el "espaciado de siempre"
+    if perfil and perfil.sobre_mi:
+        perfil.sobre_mi = perfil.sobre_mi.strip()
     
-    # Creamos el contexto con todos los datos filtrados por "activarparaqueseveaenfront"
+    # Convertimos aptitudes en lista y limpiamos espacios de cada una
+    skills = [s.strip() for s in perfil.aptitudes.split(',')] if perfil and perfil.aptitudes else []
+    
+    # Contexto con filtros activos
     context = {
         'p': perfil,
         'skills': skills,
         'experiencias': ExperienciaLaboral.objects.filter(activarparaqueseveaenfront=True),
         'reconocimientos': Reconocimiento.objects.filter(activarparaqueseveaenfront=True),
         'cursos': CursoRealizado.objects.filter(activarparaqueseveaenfront=True),
-        # Estas dos líneas son las que activan tus nuevos botones
         'academicos': ProductoAcademico.objects.filter(activarparaqueseveaenfront=True),
         'laborales': ProductoLaboral.objects.filter(activarparaqueseveaenfront=True),
         'garage': VentaGarage.objects.filter(activarparaqueseveaenfront=True),
