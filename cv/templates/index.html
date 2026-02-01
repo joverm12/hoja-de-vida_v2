@@ -111,16 +111,18 @@
                 display: block !important;
             }
 
-            /* 1. FLUJO CONTINUO SIN SALTOS RAROS (Imagen 25267a) */
+            /* 1. ELIMINA EL ESPACIADO DE SIEMPRE (Imagen 24be15) */
             .section-view.print-include { 
                 display: block !important; 
                 page-break-after: auto !important;
                 page-break-inside: auto !important;
                 clear: both !important; 
+                margin: 0 !important;
+                padding: 0 !important;
                 position: relative !important;
             }
 
-            /* 2. FIX IMAGEN TÍTULO (Imagen 24be38) */
+            /* 2. FIX IMAGEN TÍTULO Y SUPERPOSICIÓN (Imagen 25267a y edited-image.png) */
             .pdf-preview-print { 
                 display: block !important; 
                 width: 100% !important; 
@@ -138,7 +140,7 @@
             .seccion-perfil { margin-bottom: 0 !important; padding-bottom: 0 !important; }
             #inicio .card.mb-5 { margin-top: 0 !important; padding-top: 5px !important; }
             
-            /* 4. TARJETAS COMPACTAS Y TEXTO ARRIBA */
+            /* 4. TARJETAS COMPACTAS Y TEXTO SIEMPRE ARRIBA */
             .card { 
                 border: 1px solid #eee !important; 
                 break-inside: avoid !important; 
@@ -148,6 +150,7 @@
                 float: none !important;
                 position: relative !important;
                 background: white !important;
+                clear: both !important;
             }
             
             .text-wrap-print { 
@@ -159,6 +162,7 @@
                 z-index: 2 !important;
             }
             
+            .mb-5, .mb-4, .py-5 { margin-bottom: 5px !important; padding: 5px !important; }
             h1, h2, h5 { margin-bottom: 4px !important; margin-top: 4px !important; }
             .btn-ver-pdf { display: none !important; }
         }
