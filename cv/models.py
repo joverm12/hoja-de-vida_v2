@@ -29,13 +29,12 @@ class DatosPersonales(models.Model):
     periodo_u = models.CharField(max_length=50, default="Mayo 2024 - En curso")
     bachillerato_status = models.CharField(max_length=100, default="Bachillerato - Completo")
     certificado_bachiller_pdf = CloudinaryField('documento', folder='certificados/', resource_type='auto', null=True, blank=True)
-    # NUEVO: Vista previa para el título
     vista_previa_titulo = CloudinaryField('imagen', folder='certificados/previa/', null=True, blank=True)
     aptitudes = models.TextField(help_text="Separa por comas")
 
     def __str__(self): return f"{self.nombres} {self.apellidos}"
 
-# 3. EXPERIENCIA LABORAL
+# 3. EXPERIENCIA LABORAL (CORREGIDO: TextField para descripciones largas)
 class ExperienciaLaboral(models.Model):
     perfil = models.ForeignKey(DatosPersonales, on_delete=models.CASCADE)
     cargodesempenado = models.CharField(max_length=100)
@@ -47,9 +46,11 @@ class ExperienciaLaboral(models.Model):
     telefonocontactoempresarial = models.CharField(max_length=60, null=True, blank=True)
     fechainiciogestion = models.DateField(validators=[validar_fecha_no_futura])
     fechafingestion = models.DateField(null=True, blank=True, validators=[validar_fecha_no_futura])
-    descripcionfunciones = models.CharField(max_length=100)
+    
+    # ARREGLADO: Ahora puedes escribir todo lo que quieras
+    descripcionfunciones = models.TextField(blank=True, null=True) 
+    
     rutacertificado = CloudinaryField('documento', folder='experiencia/', resource_type='auto', null=True, blank=True)
-    # NUEVO: Vista previa para certificado laboral
     vista_previa_exp = CloudinaryField('imagen', folder='experiencia/previa/', null=True, blank=True)
     activarparaqueseveaenfront = models.BooleanField(default=True)
 
@@ -61,35 +62,39 @@ class Reconocimiento(models.Model):
     fechareconocimiento = models.DateField(validators=[validar_fecha_no_futura])
     descripcion = models.TextField(blank=True, null=True) 
     comprobante_archivo = CloudinaryField('documento', folder='reconocimientos/', resource_type='auto', null=True, blank=True)
-    # NUEVO: Vista previa para reconocimiento
     vista_previa_reco = CloudinaryField('imagen', folder='reconocimientos/previa/', null=True, blank=True)
     activarparaqueseveaenfront = models.BooleanField(default=True)
 
-# 5. CURSOS REALIZADOS
+# 5. CURSOS REALIZADOS (CORREGIDO: TextField para descripción)
 class CursoRealizado(models.Model):
     perfil = models.ForeignKey(DatosPersonales, on_delete=models.CASCADE)
     nombrerecurso = models.CharField(max_length=100)
     fechainicio = models.DateField(validators=[validar_fecha_no_futura])
     fechafin = models.DateField(validators=[validar_fecha_no_futura])
     totalhoras = models.IntegerField()
-    descripcioncurso = models.CharField(max_length=100)
+    
+    # ARREGLADO: Descripción del curso sin límites
+    descripcioncurso = models.TextField(blank=True, null=True)
+    
     entidadpatrocinadora = models.CharField(max_length=100)
     nombrecontactoauspicia = models.CharField(max_length=100, null=True, blank=True)
     telefonocontactoauspicia = models.CharField(max_length=60, null=True, blank=True)
     emailempresapatrocinadora = models.CharField(max_length=60, null=True, blank=True)
     rutacertificado = CloudinaryField('documento', folder='cursos/', resource_type='auto', null=True, blank=True)
-    # NUEVO: Vista previa para curso
     vista_previa_cur = CloudinaryField('imagen', folder='cursos/previa/', null=True, blank=True)
     activarparaqueseveaenfront = models.BooleanField(default=True)
 
     def __str__(self): return self.nombrerecurso
 
-# 6. PRODUCTOS ACADÉMICOS
+# 6. PRODUCTOS ACADÉMICOS (CORREGIDO: TextField para descripción)
 class ProductoAcademico(models.Model):
     perfil = models.ForeignKey(DatosPersonales, on_delete=models.CASCADE)
     nombrerecurso = models.CharField(max_length=100)
     clasificador = models.CharField(max_length=100)
-    descripcion = models.CharField(max_length=100)
+    
+    # ARREGLADO: Descripción académica completa
+    descripcion = models.TextField(blank=True, null=True)
+    
     activarparaqueseveaenfront = models.BooleanField(default=True)
 
 # 7. PRODUCTOS LABORALES
