@@ -94,13 +94,13 @@
         @media print {
             @page { 
                 size: A4; 
-                margin: 5mm 5mm !important; 
+                margin: 5mm !important; 
             }
             .no-print { display: none !important; }
             body { 
                 background: white !important; 
                 display: block !important; 
-                -webkit-print-color-adjust: exact;
+                -webkit-print-color-adjust: exact !important;
             }
             .main { 
                 margin-left: 0 !important; 
@@ -109,7 +109,7 @@
                 display: block !important;
             }
             
-            /* ARREGLO PARA PEGAR SECCIONES Y EVITAR HUECOS (IMAGEN 25aad2 y 25aa5b) */
+            /* FIX PARA ELIMINAR LOS HUECOS BLANCOS GIGANTES */
             .section-view { 
                 display: none !important; 
                 padding: 0 !important; 
@@ -119,21 +119,17 @@
             }
             .section-view.print-include { 
                 display: block !important; 
-                page-break-before: avoid !important; 
-                page-break-after: avoid !important;
-            }
-            .pdf-preview-print { 
-                display: block !important; 
-                margin: 5px auto; 
-                page-break-inside: avoid; 
-                max-height: 300px;
+                page-break-before: auto !important; 
+                page-break-after: auto !important;
+                margin-top: 0 !important;
+                padding-top: 10px !important;
             }
             
             .card { 
                 border: 1px solid #eee !important; 
                 break-inside: avoid !important; 
-                margin-bottom: 8px !important; 
-                padding: 10px !important; 
+                margin-bottom: 5px !important; 
+                padding: 8px !important; 
             }
             .row { 
                 display: flex !important; 
@@ -141,9 +137,9 @@
                 margin: 0 !important; 
             }
             .mb-5, .mb-4, .py-5 { 
-                margin-bottom: 8px !important; 
-                padding-top: 5px !important; 
-                padding-bottom: 5px !important; 
+                margin-bottom: 5px !important; 
+                padding-top: 2px !important; 
+                padding-bottom: 2px !important; 
             }
             .mt-3 { margin-top: 0 !important; }
             
@@ -155,8 +151,9 @@
                 display: block !important; 
                 line-height: 1.2 !important;
             }
-            h1, h2, h5 { margin-bottom: 4px !important; margin-top: 4px !important; }
+            h1, h2, h5 { margin-bottom: 2px !important; margin-top: 4px !important; }
             .btn-ver-pdf { display: none !important; }
+            .pdf-preview-print { display: block !important; max-height: 250px; margin: 5px auto; }
         }
     </style>
 </head>
