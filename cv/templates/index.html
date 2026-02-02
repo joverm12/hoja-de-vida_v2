@@ -94,7 +94,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* CONFIGURACIÓN MAESTRA DE DESCARGA PDF - VICTORIA MAGISTRAL */
         @media print {
             @page { 
                 size: A4; 
@@ -119,7 +118,6 @@
                 clear: both !important; 
                 margin: 0 !important;
                 padding: 10px !important;
-                position: relative !important;
                 background: white !important;
                 border: none !important;
                 box-shadow: none !important;
@@ -147,8 +145,8 @@
             .card { 
                 border: 1px solid #eee !important; 
                 break-inside: avoid !important; 
-                margin-bottom: 10px !important; 
-                padding: 15px !important;
+                margin-bottom: 8px !important; 
+                padding: 12px !important;
                 display: table !important; 
                 width: 100% !important;
                 clear: both !important;
@@ -172,8 +170,6 @@
     </style>
 </head>
 <body>
-
-{% if user.is_authenticated %}
 
 <div class="sidebar no-print">
     <h3 class="text-center mb-5 text-white fw-bold">HOJA DE VIDA</h3>
@@ -218,10 +214,6 @@
         <button class="nav-btn" onclick="show('gar', this)"><i class="bi bi-tags me-2"></i> Venta Garage</button>
         <button class="btn btn-success w-100 mt-4 shadow-sm fw-bold" onclick="imprimirSeleccion()"><i class="bi bi-printer me-2"></i> DESCARGAR PDF</button>
         <a href="/admin" class="btn btn-danger w-100 mt-2 shadow-sm"><i class="bi bi-gear-fill me-2"></i> ADMIN</a>
-        <form action="{% url 'logout' %}" method="post" class="mt-2 no-print">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-warning w-100 shadow-sm"><i class="bi bi-box-arrow-left me-2"></i> SALIR</button>
-        </form>
     </nav>
 </div>
 
@@ -401,23 +393,15 @@
     {% endif %}
 </div>
 
-{% else %}
-<div class="container d-flex justify-content-center align-items-center vh-100">
-    <div class="card p-5 shadow-lg rounded-4 text-center border-0" style="max-width: 450px;">
-        <h2 class="fw-bold text-primary mb-4">Acceso Restringido</h2>
-        <p class="text-muted mb-4">Debes iniciar sesión para visualizar tu Hoja de Vida.</p>
-        <a href="{% url 'login' %}" class="btn btn-primary btn-lg w-100 shadow-sm">Iniciar Sesión</a>
-    </div>
-</div>
-{% endif %}
-
 <script>
     function show(id, btn) {
         document.querySelectorAll('.section-view').forEach(v => {
             v.classList.remove('active');
             v.style.display = 'none';
         });
+
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('btn-active'));
+        
         const target = document.getElementById(id);
         if (target) {
             target.classList.add('active');
@@ -425,6 +409,7 @@
         }
         btn.classList.add('btn-active');
     }
+
     function imprimirSeleccion() {
         document.querySelectorAll('.section-view').forEach(s => s.classList.remove('print-include'));
         document.getElementById('inicio').classList.add('print-include');
