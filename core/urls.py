@@ -1,13 +1,16 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include # Asegúrate de agregar 'include' aquí
 from cv.views import home
 
-# PROTECCIÓN DE FOOTPRINTING: Cambia los nombres para que no diga Django
-admin.site.site_header = "SISTEMA DE GESTIÓN PROFESIONAL" 
-admin.site.site_title = "Panel Administrativo" 
-admin.site.index_title = "Bienvenido al Gestor de Contenido"
+# ESTO CUMPLE LO QUE PIDIÓ TU PROFESOR:
+# Solo cambia el Admin, el CV sigue igual.
+admin.site.site_header = "SISTEMA DE GESTIÓN" 
+admin.site.site_title = "Portal Administrativo"
+admin.site.index_title = "Bienvenido"
 
 urlpatterns = [
-    path('admin/', admin.site.urls), # El admin sigue protegido por su propio login
-    path('', home, name='home'),     # Tu CV sigue público para todo el mundo
+    path('admin/', admin.site.urls), # El admin sigue en su ruta
+    # AGREGA ESTA LÍNEA para que el error NoReverseMatch desaparezca:
+    path('accounts/', include('django.contrib.auth.urls')), 
+    path('', home, name='home'),
 ]
