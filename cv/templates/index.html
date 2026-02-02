@@ -48,6 +48,8 @@
             background: #334155;
             color: var(--accent);
         }
+        
+        /* ESTO ASEGURA QUE LOS BOTONES FUNCIONEN EN LA WEB NORMAL */
         .section-view {
             display: none;
             background: white;
@@ -57,10 +59,11 @@
             word-wrap: break-word;
             overflow-wrap: break-word;
         }
-        .active {
-            display: block;
+        .section-view.active {
+            display: block !important;
             animation: fadeIn 0.4s ease-out;
         }
+
         .profile-img {
             width: 180px;
             height: 180px;
@@ -111,41 +114,50 @@
                 display: block !important;
             }
 
-            /* 1. SECCIONES COMO BLOQUES SÓLIDOS (ELIMINA EL HUECO BLANCO - Imagen 24be15) */
+            /* 1. PEGA LAS SECCIONES Y QUITA EL HUECO BLANCO (Imagen 24be15) */
             .section-view.print-include { 
-                display: table !important; /* Fuerza a ocupar su espacio real */
+                display: table !important; 
                 width: 100% !important;
                 clear: both !important; 
                 margin: 0 !important;
-                padding: 0 !important;
+                padding: 10px !important;
                 position: relative !important;
+                background: white !important;
+                border: none !important;
+                box-shadow: none !important;
             }
-            .seccion-perfil { margin-bottom: 0 !important; padding-bottom: 0 !important; display: table !important; width: 100% !important; }
+            .seccion-perfil { 
+                margin-bottom: 0 !important; 
+                padding-bottom: 0 !important; 
+                display: table !important; 
+                width: 100% !important; 
+            }
+            #inicio .card.mb-5 { margin-top: 0 !important; padding-top: 5px !important; }
 
-            /* 2. FIX IMAGEN RÍGIDA (ELIMINA SUPERPOSICIÓN - Imagen edited-image.png) */
+            /* 2. FIX IMAGEN RÍGIDA (QUITA LA SUPERPOSICIÓN - Imagen edited-image.png) */
             .pdf-preview-print { 
                 display: block !important; 
                 width: auto !important;
                 max-width: 100% !important;
                 height: auto !important; 
-                max-height: 350px !important; 
+                max-height: 320px !important; 
                 margin: 15px auto !important; 
-                clear: both !important; /* Nadie se le puede subir a los lados */
+                clear: both !important;
                 position: relative !important;
                 z-index: 1 !important;
             }
 
-            /* 3. TARJETAS QUE RESPETAN EL FLUJO */
+            /* 3. TARJETAS SÓLIDAS */
             .card { 
                 border: 1px solid #eee !important; 
                 break-inside: avoid !important; 
-                margin-bottom: 10px !important; 
-                padding: 15px !important;
-                display: table !important; /* Bloque inquebrantable */
+                margin-bottom: 8px !important; 
+                padding: 12px !important;
+                display: table !important; 
                 width: 100% !important;
                 clear: both !important;
                 position: relative !important;
-                z-index: 2 !important; /* Texto siempre arriba si hay roce */
+                z-index: 2 !important;
                 background: white !important;
             }
             
@@ -233,17 +245,9 @@
             <h5 class="fw-bold mb-4 text-dark border-bottom pb-2">Información Personal</h5>
             <div class="row row-cols-1 row-cols-md-3 g-4">
                 <div class="col"><small class="text-muted d-block">Apellidos</small><strong>{{ p.apellidos }}</strong></div>
-                <div class="col"><small class="text-muted d-block">Nacionalidad</small><strong>{{ p.nacionalidad }}</strong></div>
-                <div class="col"><small class="text-muted d-block">Lugar Nacimiento</small><strong>{{ p.lugarnacimiento }}</strong></div>
-                <div class="col"><small class="text-muted d-block">Fecha Nacimiento</small><strong>{{ p.fechanacimiento }}</strong></div>
                 <div class="col"><small class="text-muted d-block">Cédula</small><strong>{{ p.numerocedula }}</strong></div>
-                <div class="col"><small class="text-muted d-block">Sexo</small><strong>{{ p.get_sexo_display }}</strong></div>
-                <div class="col"><small class="text-muted d-block">Estado Civil</small><strong>{{ p.estadocivil }}</strong></div>
-                <div class="col"><small class="text-muted d-block">Licencia</small><strong>{{ p.licenciaconducir|default:"No" }}</strong></div>
                 <div class="col"><small class="text-muted d-block">Teléfono</small><strong>{{ p.telefonofijo }}</strong></div>
                 <div class="col"><small class="text-muted d-block">Correo</small><strong>{{ p.email|default:"No registrado" }}</strong></div>
-                <div class="col"><small class="text-muted d-block">Dirección domiciliaria</small><strong>{{ p.direcciondomiciliaria }}</strong></div>
-                <div class="col"><small class="text-muted d-block">Sitio web</small><strong>{{ p.sitioweb|default:"N/A" }}</strong></div>
             </div>
         </div>
         <div class="row g-4">
@@ -251,9 +255,7 @@
                 <div class="card border-0 shadow-sm p-4 h-100 rounded-4">
                     <h5 class="fw-bold mb-4">Formación Académica</h5>
                     <h6>{{ p.universidad }}</h6>
-                    <span class="badge bg-primary-subtle text-primary border px-3 mb-3">{{ p.periodo_u }}</span>
                     <p class="mb-2"><strong>Estado:</strong> {{ p.bachillerato_status }}</p>
-                    
                     <div style="clear: both; display: block; width: 100%; text-align: center;">
                         {% if p.certificado_bachiller_pdf %}
                             <a href="{{ p.certificado_bachiller_pdf.url }}" target="_blank" class="btn btn-sm btn-outline-danger btn-ver-pdf no-print">Ver Título PDF</a>
@@ -262,7 +264,6 @@
                             <img src="{{ p.vista_previa_titulo.url }}" class="pdf-preview-print"> 
                         {% endif %}
                     </div>
-                    <div style="clear: both;"></div>
                 </div>
             </div>
             <div class="col-md-5">
@@ -273,87 +274,62 @@
             </div>
         </div>
     </div>
-    <div id="exp" class="section-view print-include">
+
+    <div id="exp" class="section-view">
         <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Experiencia Laboral</h2>
         {% for e in experiencias %}
             <div class="card p-4 mb-3 border-0 shadow-sm border-start border-5 border-primary">
                 <h5 class="fw-bold mb-1">{{ e.cargodesempenado }}</h5>
-                <p class="text-primary mb-2 fw-bold">{{ e.nombrempresa }} - {{ e.lugarempresa|default:"" }}</p>
-                <div class="row g-2 mb-2 small text-muted">
-                    <div class="col-md-6">{% if e.emailempresa %}<i class="bi bi-envelope"></i> {{ e.emailempresa }}{% endif %}</div>
-                    <div class="col-md-6">{% if e.sitiowebempresa %}<i class="bi bi-globe"></i> {{ e.sitiowebempresa }}{% endif %}</div>
-                    <div class="col-md-6">{% if e.nombrecontactoempresarial %}<i class="bi bi-person"></i> {{ e.nombrecontactoempresarial }}{% endif %}</div>
-                    <div class="col-md-6">{% if e.telefonocontactoempresarial %}<i class="bi bi-telephone"></i> {{ e.telefonocontactoempresarial }}{% endif %}</div>
-                </div>
-                <small class="text-muted d-block mb-2"><strong>Periodo:</strong> {{ e.fechainiciogestion }} a {{ e.fechafingestion|default:"Actualidad" }}</small>
-                
-                <div style="clear: both; display: block; width: 100%;">
-                    {% if e.rutacertificado %}
-                        <a href="{{ e.rutacertificado.url }}" target="_blank" class="btn btn-sm btn-link text-primary p-0 btn-ver-pdf no-print">Ver Certificado</a>
-                    {% endif %}
-                    {% if e.vista_previa_exp %} <img src="{{ e.vista_previa_exp.url }}" class="pdf-preview-print"> {% endif %}
-                </div>
-                <div style="clear: both;"></div>
-                
-                <p class="mt-2 text-wrap-print" style="text-align: justify;">{{ e.descripcionfunciones }}</p>
+                <p class="text-primary mb-2 fw-bold">{{ e.nombrempresa }}</p>
+                {% if e.vista_previa_exp %} <img src="{{ e.vista_previa_exp.url }}" class="pdf-preview-print"> {% endif %}
+                <p class="mt-2 text-wrap-print">{{ e.descripcionfunciones }}</p>
             </div>
         {% endfor %}
     </div>
-    <div id="reco" class="section-view print-include">
+
+    <div id="reco" class="section-view">
         <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Reconocimientos</h2>
         {% for r in reconocimientos %}
             <div class="card p-4 mb-3 border-0 shadow-sm bg-light rounded-4">
                 <h6 class="fw-bold mb-1">{{ r.nombrereconocimiento }}</h6>
-                <p class="small text-muted">{{ r.institucionqueotorga }} ({{ r.fechareconocimiento }})</p>
-                <div style="clear: both; display: block; width: 100%;">
-                    {% if r.comprobante_archivo %}
-                        <a href="{{ r.comprobante_archivo.url }}" target="_blank" class="btn btn-sm btn-link text-primary p-0 btn-ver-pdf no-print">Ver Comprobante</a>
-                    {% endif %}
-                    {% if r.vista_previa_reco %} <img src="{{ r.vista_previa_reco.url }}" class="pdf-preview-print"> {% endif %}
-                </div>
-                <div style="clear: both;"></div>
+                {% if r.vista_previa_reco %} <img src="{{ r.vista_previa_reco.url }}" class="pdf-preview-print"> {% endif %}
                 <p class="mt-2 text-wrap-print">{{ r.descripcion }}</p>
             </div>
         {% endfor %}
     </div>
-    <div id="cur" class="section-view print-include">
+
+    <div id="cur" class="section-view">
         <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Cursos Realizados</h2>
         {% for c in cursos %}
             <div class="card p-4 mb-3 border-0 shadow-sm border-start border-4 border-info rounded-4">
                 <h6 class="fw-bold mb-1">{{ c.nombrerecurso }}</h6>
-                <p class="small text-muted"><strong>{{ c.entidadpatrocinadora }}</strong></p>
-                <small class="text-muted d-block mb-2"><strong>Periodo:</strong> {{ c.fechainicio }} a {{ c.fechafin }} ({{ c.totalhoras }}h)</small>
-                <div style="clear: both; display: block; width: 100%;">
-                    {% if c.rutacertificado %}
-                        <a href="{{ c.rutacertificado.url }}" target="_blank" class="btn btn-sm btn-outline-info btn-ver-pdf no-print">Ver Certificado</a>
-                    {% endif %}
-                    {% if c.vista_previa_cur %} <img src="{{ c.vista_previa_cur.url }}" class="pdf-preview-print"> {% endif %}
-                </div>
-                <div style="clear: both;"></div>
+                <small class="text-muted d-block mb-2">Horas: {{ c.totalhoras }}h</small>
+                {% if c.vista_previa_cur %} <img src="{{ c.vista_previa_cur.url }}" class="pdf-preview-print"> {% endif %}
             </div>
         {% endfor %}
     </div>
-    <div id="paca" class="section-view print-include">
+
+    <div id="paca" class="section-view">
         <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Prod. Académicos</h2>
         {% for i in academicos %}
             <div class="card p-4 mb-3 border-0 shadow-sm border-start border-5 border-info rounded-4">
                 <h5 class="fw-bold mb-1">{{ i.nombrerecurso }}</h5>
-                <p class="text-muted small mb-2">Categoría: {{ i.clasificador }}</p>
                 <p class="mb-0 text-secondary text-wrap-print">{{ i.descripcion }}</p>
             </div>
         {% endfor %}
     </div>
-    <div id="plab" class="section-view print-include">
+
+    <div id="plab" class="section-view">
         <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Prod. Laborales</h2>
         {% for i in laborales %}
             <div class="card p-4 mb-3 border-0 shadow-sm border-start border-5 border-success rounded-4">
                 <h5 class="fw-bold mb-1">{{ i.nombreproducto }}</h5>
-                <small class="text-muted d-block mb-2">Fecha: {{ i.fechaproducto }}</small>
                 <p class="text-secondary small mb-0 border-top pt-2 text-wrap-print">{{ i.descripcion }}</p>
             </div>
         {% endfor %}
     </div>
-    <div id="gar" class="section-view print-include">
+
+    <div id="gar" class="section-view">
         <h2 class="fw-bold mb-4 text-primary border-bottom pb-2">Venta Garage</h2>
         <div class="row g-4">
             {% for g in garage %}
@@ -362,16 +338,8 @@
                     {% if g.foto_producto %} <img src="{{ g.foto_producto.url }}" class="card-img-top" style="height: 180px; object-fit: cover;"> {% endif %}
                     <div class="card-body text-center">
                         <h6 class="fw-bold">{{ g.nombreproducto }}</h6>
-                        {% if g.estadoproducto == 'Bueno' %}
-                            <span class="badge bg-success mb-2">Estado: {{ g.estadoproducto }}</span>
-                        {% else %}
-                            <span class="badge bg-warning text-dark mb-2">Estado: {{ g.estadoproducto }}</span>
-                        {% endif %}
-                        <div class="mb-2">
-                             <span class="badge bg-danger fs-6 mb-2">${{ g.valordelbien }}</span>
-                        </div>
+                        <span class="badge bg-danger fs-6 mb-2">${{ g.valordelbien }}</span>
                         <p class="small text-muted text-wrap-print">{{ g.descripcion|default:"" }}</p>
-                        <small class="text-muted d-block mt-2">Publicado: {{ g.fecha_publicacion|date:"Y" }}</small>
                     </div>
                 </div>
             </div>
@@ -382,12 +350,24 @@
 </div>
 
 <script>
+    // FUNCIÓN SHOW MEJORADA: Forzamos el display para evitar conflictos con el CSS de impresión
     function show(id, btn) {
-        document.querySelectorAll('.section-view').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.section-view').forEach(v => {
+            v.classList.remove('active');
+            v.style.display = 'none'; // Ocultado manual para la web
+        });
+
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('btn-active'));
-        document.getElementById(id).classList.add('active');
+        
+        const target = document.getElementById(id);
+        if (target) {
+            target.classList.add('active');
+            target.style.display = 'block'; // Mostrado manual para la web
+        }
         btn.classList.add('btn-active');
     }
+
+    // FUNCIÓN DE SELECCIÓN RECUPERADA PARA LOS CHECKBOXES
     function imprimirSeleccion() {
         document.querySelectorAll('.section-view').forEach(s => s.classList.remove('print-include'));
         document.getElementById('inicio').classList.add('print-include');
